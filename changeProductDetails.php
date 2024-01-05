@@ -63,9 +63,21 @@ include "./connection.php";
 
         <h3 class="text-center text-light mb-3">Edit Products Details</h3>
 
-        <div class="d-flex col-3 input-group mb-3 custom-file-button ">
-            <span class="input-group-text" id="basic-addon3">Product Image</span>
-            <input type="file" class="form-control bg-dark text-white" placeholder="Invoice image" accept="image/png" name="productPhoto" aria-describedby="basic-addon3" onchange="previewImage(event)">
+        <div class=" d-flex  justify-content-center">
+            <div class="">
+            <form action="./Backend/updatePhoto.php" method="post" enctype="multipart/form-data">
+                <input type="text" name="sr" value="<?php echo $_GET['sr']?>" hidden>
+
+                <div class="d-flex input-group mb-3 custom-file-button col-6 ">
+                    <span class="input-group-text" id="basic-addon3">Product Image</span>
+                    <input type="file" class="form-control bg-dark text-white col-6" placeholder="Invoice image" accept="image/png" name="productPhoto" aria-describedby="basic-addon3" onchange="previewImage(event)" required>
+                </div>
+                <div class="text-center">
+                    
+                    <button type="submit" class="btn btn-success mb-3" > Upload Image</button>
+                </div>
+            </form>
+            </div>
         </div>
 
         <div class="row d-flex justify-content-around">
@@ -81,7 +93,7 @@ include "./connection.php";
                         <p class="card-text"><span class="text-light h3"> &#8377 <span id="sellingPrice" contenteditable="true"><?php echo $row['sellingPrice'] ?></span>/-</span> MRP: <del id="mrp" contenteditable="true"><?php echo $row['mrp'] ?></del>/- <span class="text-success">(<?php $discount = (($row['mrp'] - $row['sellingPrice']) / $row['mrp']) * 100;
                                                                                                                                                                                                                                                                                             echo round($discount) ?>% off)</span></p>
 
-                        <button class="btn btn-primary" onclick="SaveData()">Save</button>
+                        <button class="btn btn-primary" onclick="SaveData()">Save Details</button>
 
                     </div>
                 </div>
@@ -110,12 +122,9 @@ include "./connection.php";
 
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-
                 reader.onload = function(e) {
                     preview.src = e.target.result;
-                    // preview.style.display = 'block';
                 };
-
                 reader.readAsDataURL(input.files[0]);
             }
         }

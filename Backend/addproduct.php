@@ -20,15 +20,9 @@ include "../connection.php";
             $photolink = 'asserts/uploads/'.$filename.".png";
       
             $resutl = mysqli_query($conn, "INSERT INTO `product`( `product`, `category`, `weight`, `imgUrl`, `flavour`, `mrp`, `sellingPrice`, `description`) VALUES ('$_POST[product]','$_POST[category]','$_POST[weight]','$photolink','{}','$_POST[mrp]','$_POST[sellingPrice]','$_POST[description]')");
-    
-
-          
-
-            
-            
         }
 
-
+        header('location:../index.php');
 
             
     }
