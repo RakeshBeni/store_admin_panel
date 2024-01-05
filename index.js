@@ -20,7 +20,7 @@ $(function () {
       "<div class='multiple-select-container " +
       selectClasses +
       "'>" +
-      "<ul class='multiple-select-choices'><li class='input'><input type='text' placeholder='Please select'></li></ul>" +
+      "<ul class='multiple-select-choices'><li class='input bg-dark'><input class='bg-dark' type='text' placeholder='Please select'></li></ul>" +
       "<div class='multiple-select-dropdown'><ul>";
 
     for (var i = 0; i < optionsArray.length; i++) {

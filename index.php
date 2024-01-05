@@ -67,13 +67,13 @@ include "./connection.php";
       $result = mysqli_query($conn, "SELECT * FROM `product`");
       while ($row = mysqli_fetch_assoc($result)) {
       ?>
-        <div class="card bg-dark text-light border-light mb-3 cardcss" >
-          <img src="<?php echo $row['imgUrl'] ?>" class="card-img-top imagecss" alt="..." >
+        <div class="card bg-dark text-light border-light mb-3 cardcss">
+          <img src="<?php echo $row['imgUrl'] ?>" class="card-img-top imagecss" alt="...">
           <div class="card-body">
-            <h5 class="card-title"><?php echo $row['product'] ?> <span><?php echo $row['weight'];?></span></h5>
+            <h5 class="card-title"><?php echo $row['product'] ?> <span><?php echo $row['weight']; ?></span></h5>
             <p class="card-text"><?php echo $row['description'] ?></p>
             <p class="card-text"><span class="text-light h3"> &#8377 <?php echo $row['sellingPrice'] ?>/-</span> MRP: <del><?php echo $row['mrp'] ?></del>/- <span class="text-success">(<?php $discount = (($row['mrp'] - $row['sellingPrice']) / $row['mrp']) * 100;
-            echo round($discount) ?>% off)</span></p>
+                                                                                                                                                                                          echo round($discount) ?>% off)</span></p>
             <a href="./changeProductDetails.php?sr=<?php echo $row['sr']; ?>"><button class="btn btn-primary m-1">Edit Details</button></a>
             <button class="btn <?php if ($row['instock']) {
                                   echo 'btn-success';
@@ -137,22 +137,22 @@ include "./connection.php";
               <span class="input-group-text" id="basic-addon1">Weight</span>
               <input type="text" class="form-control bg-dark text-white" name="weight">
             </div>
-            
-            <div class=" mb-3">
-              <select class="form-control multiple-select "  multiple >
-            <?php 
-              $con=new mysqli('89.117.157.168','u359658933_authenfitplus','G00dL1fe$$$$','u359658933_authenfitplus');
-              $result = mysqli_query($con, "SELECT * FROM `category and flavours`");
-                  while($row2 = mysqli_fetch_assoc($result)){  ?>
-				<option class="<?php echo $row2['flavour']?>" value="<?php echo $row2['flavour']?>"><?php echo $row2['flavour']?></option>
-            <?php }?>
-				
-			</select>
-		</div>
+
+            <div class=" mb-3 bg-dark">
+              <select class="form-control multiple-select bg-dark" multiple>
+                <?php
+                $con = new mysqli('89.117.157.168', 'u359658933_authenfitplus', 'G00dL1fe$$$$', 'u359658933_authenfitplus');
+                $result = mysqli_query($con, "SELECT * FROM `category and flavours`");
+                while ($row2 = mysqli_fetch_assoc($result)) {  ?>
+                  <option class="<?php echo $row2['flavour'] ?>" value="<?php echo $row2['flavour'] ?>"><?php echo $row2['flavour'] ?></option>
+                <?php } ?>
+
+              </select>
+            </div>
 
 
-      
-      <div class="input-group mb-3">
+
+            <div class="input-group mb-3">
               <span class="input-group-text" id="basic-addon1">MRP</span>
               <input type="number" class="form-control bg-dark text-white" name="mrp">
             </div>
@@ -173,13 +173,13 @@ include "./connection.php";
           <button type="button" onclick="submitForm()" class="btn btn-primary m-2">Save changes</button>
 
         </div>
-      </form>
+        </form>
       </div>
     </div>
   </div>
 
 
-  
+
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
@@ -207,7 +207,7 @@ include "./connection.php";
         .then(data => {
           // Handle the response from the server, if needed
           console.log(data);
-          if(data == "success"){
+          if (data == "success") {
             location.reload();
           }
         })
@@ -218,13 +218,11 @@ include "./connection.php";
 
     }
 
-    
+
 
     function addProduct() {
       $('#addProductModal').modal('show')
     }
-
- 
   </script>
   <script src="index.js"></script>
 </body>
