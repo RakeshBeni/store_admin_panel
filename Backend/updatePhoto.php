@@ -26,17 +26,17 @@ include "../connection.php";
 
             $filename = uniqid('PP');
 
-            $destinationFolder = "../asserts/uploads";
+            $destinationFolder = "../assets/uploads";
             if (!is_dir($destinationFolder)) {
                 mkdir($destinationFolder, 0777, true); 
             }
             move_uploaded_file($file_tmp, $destinationFolder .'/'. $filename . ".png");
 
-            $photolink = 'asserts/uploads/'.$filename.".png";
+            $photolink = 'assets/uploads/'.$filename.".png";
       
             $resutl = mysqli_query($conn, "UPDATE `product` SET `imgUrl`='$photolink' WHERE `sr` = '$_POST[sr]'");
         }
-        header('location:../changeProductDetails.php?sr='.$_POST['sr']);
+        // header('location:../changeProductDetails.php?sr='.$_POST['sr']);
             
     }
 ?>
