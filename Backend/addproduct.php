@@ -14,11 +14,7 @@ include "../connection.php";
             }
             move_uploaded_file($file_tmp, $destinationFolder .'/'. $filename . ".png");
 
-<<<<<<< HEAD
             $photolink = 'assets/uploads/'.$filename.".png";
-=======
-            $photolink = 'asserts/uploads/'.$filename.".png";
->>>>>>> 5c8bf571d6909e32ad7916b5d0527dfa5ab3809b
             $flavourJson = json_encode(['flavour' => $_POST['flavour']]);
       
             $resutl = mysqli_query($conn, "INSERT INTO `product`( `product`, `category`, `weight`, `imgUrl`, `flavour`, `mrp`, `sellingPrice`, `description`) VALUES ('$_POST[product]','$_POST[category]','$_POST[weight]','$photolink','$flavourJson','$_POST[mrp]','$_POST[sellingPrice]','$_POST[description]')");

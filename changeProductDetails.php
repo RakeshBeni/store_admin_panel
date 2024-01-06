@@ -88,8 +88,8 @@ include "./connection.php";
             <div class="card bg-dark text-light border-light mb-3" style="width: 22rem;">
                 <img src="<?php echo $row['imgUrl'] ?>" id="productImg" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title" id="tital" contenteditable="true"><?php echo $row['product'] ?></h5>
-                    <p class="card-text" id="cart-description" contenteditable="true"><?php echo $row['description'] ?>.</p>
+                    <h5 class="card-title"><span id="tital" contenteditable="true"> <?php echo $row['product'] ?> </span>  <span id="weight" contenteditable="true"><?php echo $row['weight']; ?></span></h5>
+                    <p class="card-text" id="cart-description" contenteditable="true"><?php echo $row['description'] ?></p>
                     <p class="card-text"><span class="text-light h3"> &#8377 <span id="sellingPrice" contenteditable="true"><?php echo $row['sellingPrice'] ?></span>/-</span> MRP: <del id="mrp" contenteditable="true"><?php echo $row['mrp'] ?></del>/- <span class="text-success">(<?php $discount = (($row['mrp'] - $row['sellingPrice']) / $row['mrp']) * 100;
                                                                                                                                                                                                                                                                                         echo round($discount) ?>% off)</span></p>
                     <div class=" mb-3">
@@ -114,7 +114,6 @@ include "./connection.php";
         </div>
     </div>
 
-    <h1 class="text-light"> fasdfds <?php print_r($row['flavour']) ?></h1>
 
 
 
@@ -127,8 +126,8 @@ include "./connection.php";
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         const obj = <?php print_r($row['flavour']) ?>;
-        const arrobj = obj.flavour[0].split(',');
-        console.log(arrobj)
+        const arrobj = obj?.flavour || [];
+
         $(function() {
             $(".multiple-select").each(function() {
 
@@ -156,16 +155,16 @@ include "./connection.php";
                     "<div class='multiple-select-container " +
                     selectClasses +
                     "'>" +
-                    "<ul class='multiple-select-choices'><li class='input bg-dark'><input class='bg-dark' type='text' placeholder='Please select'></li></ul>" +
+                    "<ul class='multiple-select-choices' id='ulidd'><li class='input bg-dark'><input class='bg-dark' type='text' placeholder='Please select'></li></ul>" +
                     "<div class='multiple-select-dropdown'><ul>";
 
-                    
+
+                let alreadyPresent = "";
 
                 for (var i = 0; i < optionsArray.length; i++) {
 
-                    console.log(optionsArray[i].value)
                     if (arrobj.includes(optionsArray[i].value)) {
-                        console.log("if condition ", optionsArray[i].class);
+
                         multipleSelectHtml +=
                             "<li class='" +
                             optionsArray[i].class +
@@ -175,17 +174,9 @@ include "./connection.php";
                             optionsArray[i].text +
                             "</li>";
 
-                        // Append selected values to the choices area
-                        var thisInput = $(this)
-                            .closest(".multiple-select-container")
-                            .find(".input");
-                        $(
-                            "<li data-value='" +
-                            optionsArray[i].value +
-                            "'>" +
-                            optionsArray[i].text +
-                            " <a href='#' class='remove-item'>&times;</a></li>"
-                        ).insertBefore(thisInput);
+                        alreadyPresent += "<li data-value='" + optionsArray[i].value + "'  class='choice-active'>" + optionsArray[i].text + " <a href='#' class='remove-item'>&times;</a></li>";
+
+
                     } else {
                         // Regular option
                         multipleSelectHtml +=
@@ -201,10 +192,26 @@ include "./connection.php";
 
 
 
+
                 multipleSelectHtml += "</ul></div></div>";
-                console.log(multipleSelectHtml)
+
+                if(arrobj.length>0){
+                    alreadyPresent += `<li class='input bg-dark choice-active'><input class='bg-dark' type='text' placeholder=''></li>`;
+                }else{
+                    alreadyPresent += `<li class='input bg-dark'><input class='bg-dark' type='text' placeholder='Please select'></li>`;
+
+                }
 
                 $(multipleSelectHtml).insertAfter($(this));
+
+
+                var choicesContainer = document.getElementById('ulidd');
+
+                choicesContainer.innerHTML = alreadyPresent;
+
+
+
+
             });
 
             // Show dropdown when input is focused
@@ -238,15 +245,14 @@ include "./connection.php";
                         optionValue = $(this).data("value"),
                         optionClass = $(this).attr("class");
 
-                    console.log(optionValue)
-
                     $(this).addClass("option-disabled");
 
                     // Add item to input
                     var thisInput = $(this)
                         .closest(".multiple-select-container")
                         .find(".input");
-                    console.log("addInput", thisInput)
+
+
                     $(
                         "<li data-value='" +
                         optionValue +
@@ -254,6 +260,8 @@ include "./connection.php";
                         optionText +
                         " <a href='#' class='remove-item'>&times;</a></li>"
                     ).insertBefore(thisInput);
+
+
 
                     // Get current value of select field
                     var currentValues = $(this)
@@ -336,38 +344,7 @@ include "./connection.php";
             });
         });
 
-        function submitForm() {
-            var form = document.getElementById("myForm");
-            const arr = document.getElementsByClassName("choice-active");
-
-            const textArray = Array.from(arr)
-                .slice(0, -1)
-                .map((node) => node.innerText.replace(" ×", ""));
-            var formData = new FormData(form);
-
-            formData.append("flavour[]", textArray);
-
-            formData.forEach(function(value, key) {
-                console.log(key, value);
-            });
-
-            // Add your code here to send the form data to the server using AJAX or other methods
-
-            //     fetch("./Backend/addproduct.php", {
-            //             method: "POST",
-            //             body: formData,
-            //         })
-            //         .then((response) => response.text())
-            //         .then((data) => {
-            //                 console.log("Server response:", data)
-            //                 if (data == "success") {
-            //                     location.reload();
-            //                 }
-            //             }
-
-            //         )
-            //         .catch((error) => console.error("Error:", error));
-        }
+    
 
         function previewImage(event) {
             const input = event.target;
@@ -388,6 +365,15 @@ include "./connection.php";
             const cartDescription = document.getElementById('cart-description').innerText;
             let sellingPrice = document.getElementById('sellingPrice').innerText;
             let mrp = document.getElementById('mrp').innerText;
+            let weight = document.getElementById('weight').innerText;
+
+
+            const arr = document.getElementsByClassName("choice-active");
+
+            const flavour = Array.from(arr)
+                .slice(0, -1)
+                .map((node) => node.innerText.replace(" ×", ""));
+            
 
             let number_mrp = Number(mrp);
 
@@ -408,31 +394,32 @@ include "./connection.php";
             const dataToSend = {
                 sr,
                 tital,
+                weight,
                 cartDescription,
                 sellingPrice,
                 sellingPrice,
-                mrp
+                mrp,
+                flavour
 
             }
             console.log(dataToSend);
 
-            // fetch('./Backend/editProductDetails.php', {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify(dataToSend),
-            //     }).then(response => response.text())
-            //     .then(data => {
-            //         // Handle the response from the server, if needed
-            //         console.log(data);
-            //         if (data == "success") {
-            //             location.reload();
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.error('Error:', error);
-            //     });
+            fetch('./Backend/editProductDetails.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataToSend),
+                }).then(response => response.text())
+                .then(data => {
+                    // Handle the response from the server, if needed
+                    if (data == "success") {
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
 
         }
     </script>
