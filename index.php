@@ -13,6 +13,23 @@ include "./connection.php";
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link rel="stylesheet" href="./assets/css/style.css">
   <style>
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 5px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #dde0e3; 
+  border-radius: 5px;
+}
+
     .custom-file-button input[type="file"] {
       margin-left: -2px !important;
     }
@@ -69,9 +86,14 @@ include "./connection.php";
       ?>
         <div class="card bg-dark text-light border-light mb-3 cardcss">
           <img src="<?php echo $row['imgUrl'] ?>" class="card-img-top imagecss" alt="...">
-          <div class="card-body">
+          <div class="card-body" style=" overflow: overlay;">
             <h5 class="card-title"><?php echo $row['product'] ?> <span><?php echo $row['weight']; ?></span></h5>
             <p class="card-text"><?php echo $row['description'] ?></p>
+            <p class="card-text">( <?php $jsonData = json_decode($row['flavour'], true); foreach ($jsonData as $key => $value) {
+           foreach ($value as $value) {
+            echo $value . ", ";
+        }
+        }   ?>)</p>
             <p class="card-text"><span class="text-light h3"> &#8377 <?php echo $row['sellingPrice'] ?>/-</span> MRP: <del><?php echo $row['mrp'] ?></del>/- <span class="text-success">(<?php $discount = (($row['mrp'] - $row['sellingPrice']) / $row['mrp']) * 100;
                                                                                                                                                                                           echo round($discount) ?>% off)</span></p>
             <a href="./changeProductDetails.php?sr=<?php echo $row['sr']; ?>"><button class="btn btn-primary m-1">Edit Details</button></a>
@@ -226,7 +248,7 @@ include "./connection.php";
 
  
   </script>
-  <script src="index.js"></script>
+
 </body>
 
 

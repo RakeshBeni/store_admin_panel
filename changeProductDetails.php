@@ -344,7 +344,7 @@ include "./connection.php";
             });
         });
 
-    
+
 
         function previewImage(event) {
             const input = event.target;
@@ -373,7 +373,7 @@ include "./connection.php";
             const flavour = Array.from(arr)
                 .slice(0, -1)
                 .map((node) => node.innerText.replace(" ×", ""));
-            
+
 
             let number_mrp = Number(mrp);
 
