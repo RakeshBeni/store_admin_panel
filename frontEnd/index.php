@@ -69,10 +69,11 @@ if (!isset($_SESSION['user'])) {
                             <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
                         </svg> Cart <?php $query1 = mysqli_query($conn, "SELECT * FROM `customers` WHERE `userId` = '$_SESSION[userId]'");
                                     $row1 = mysqli_fetch_assoc($query1);
-                            
+
 
                                     $cartData = json_decode($row1['Cart'], true);
                                     echo $cartData['length']; ?></a>
+                                    
                 </div>
                 <form class="d-flex" role="search" id="searchForm">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -110,7 +111,7 @@ if (!isset($_SESSION['user'])) {
                         <p class="card-text"><span class="text-light h3"> &#8377 <?php echo $row['sellingPrice'] ?>/-</span> MRP: <del><?php echo $row['mrp'] ?></del>/- <span class="text-success">(<?php $discount = (($row['mrp'] - $row['sellingPrice']) / $row['mrp']) * 100;
                                                                                                                                                                                                         echo round($discount) ?>% off)</span></p>
                         <div class="sticky">
-                           <button class="btn btn-primary" onclick="addcart(this)" data-product="<?php echo $row['sr']?>">Add to cart</button>
+                            <button class="btn btn-primary" onclick="addcart(this)" data-product="<?php echo $row['sr'] ?>">Add to cart</button>
 
                         </div>
                     </div>
@@ -135,9 +136,30 @@ if (!isset($_SESSION['user'])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
-        function addcart(e){
-            console.log(e.dataset.product);
+        function addcart(e) {
+            const productId = e.dataset.product;
 
+            const dataToSend = {
+                productId
+            }
+
+            fetch('./Backend/addtoCart.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataToSend),
+                }).then(response => response.text())
+                .then(data => {
+                    // Handle the response from the server, if needed
+                    console.log(data);
+                    if (data == "success") {
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
 
         }
     </script>
