@@ -11,21 +11,25 @@ if (isset($_POST)) {
     $row1 = mysqli_fetch_assoc($query);
     $cartData = json_decode($row1['Cart'], true);
 
+    $flavours = $data['flavours'];
+    
+    foreach ($flavours as $flavour) {
 
+        // Add a new object to the "objects" array
+        $newObject = array("productId" => "$data[productId]","flavour" => "$flavour");
+        $cartData['length'] = $cartData['length']+1;
+        $cartData['product'][] = $newObject;
+        // Encode the updated data back to JSON
+        $newJsonString = json_encode($cartData, JSON_PRETTY_PRINT);
+        
+    
+    
+        $result = mysqli_query($conn, "UPDATE `customers` SET `Cart`='$newJsonString' WHERE `userId` = '$_SESSION[userId]' ");
+    }
    
     
 
-    // Add a new object to the "objects" array
-    $newObject = array("productId" => "$data[productId]");
-    $cartData['length'] = $cartData['length']+1;
-    $cartData['product'][] = $newObject;
     
-    // Encode the updated data back to JSON
-    $newJsonString = json_encode($cartData, JSON_PRETTY_PRINT);
-    
-
-
-    $result = mysqli_query($conn, "UPDATE `customers` SET `Cart`='$newJsonString' WHERE `userId` = '$_SESSION[userId]' ");
 
 
     if($result){

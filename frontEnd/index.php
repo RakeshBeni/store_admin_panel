@@ -103,31 +103,30 @@ if (!isset($_SESSION['user'])) {
                         <h5 class="card-title"><?php echo $row['product'] ?> <span><?php echo $row['weight']; ?></span></h5>
                         <p class="card-text"><?php echo $row['description'] ?></p>
 
-                        
-                        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                            
-                            
-                            </div>
+
+                        <div class="btn-group d-flex flex-wrap" role="group" aria-label="Basic checkbox toggle button group">
+
+
+
                             <?php $jsonData = json_decode($row['flavour'], true);
-                        foreach ($jsonData as $key => $value) {
-                            foreach ($value as $value) { 
-                                ?>
-                                <input type="checkbox" class="btn-check" id="<?php echo $value.$row['sr'];?>" autocomplete="off">
-                                <label class="btn btn-outline-secondary m-1" for="<?php echo $value.$row['sr'];?>"><?php echo $value;?></label>
-                          <?php  }
-                        }   ?>
+                            foreach ($jsonData as $key => $value) {
+                                foreach ($value as $value) {
+                            ?>
+                                    <input type="checkbox" value="<?php echo $value; ?>" class="btn-check" id="<?php echo $value . $row['sr']; ?>" autocomplete="off">
+                                    <label class="btn btn-outline-secondary my-1" for="<?php echo $value . $row['sr']; ?>"><?php echo $value; ?></label>
+                            <?php  }
+                            }   ?>
+                        </div>
                         <p class="card-text"><span class="text-light h3"> &#8377 <?php echo $row['sellingPrice'] ?>/-</span> MRP: <del><?php echo $row['mrp'] ?></del>/- <span class="text-success">(<?php $discount = (($row['mrp'] - $row['sellingPrice']) / $row['mrp']) * 100;
                                                                                                                                                                                                         echo round($discount) ?>% off)</span></p>
                         <div>
-                            <?php if($row['instock'] == '1'){
+                            <?php
+                            if ($row['instock'] == '1') {
                                 echo " <button class='btn btn-primary' onclick='addcart(this)' data-product=' $row[sr]'>Add to cart</button>";
-                            }else{
+                            } else {
                                 echo " <button class='btn btn-primary disabled' >Out Of Stock</button>";
-
                             }
                             ?>
-                           
-
                         </div>
                     </div>
                 </div>
@@ -154,10 +153,23 @@ if (!isset($_SESSION['user'])) {
         function addcart(e) {
             const productId = e.dataset.product;
 
-            const dataToSend = {
-                productId
+            let btnCheckElements = e.parentNode.parentNode.getElementsByClassName('btn-check');
+            let flavours = [];
+            for (var i = 0; i < btnCheckElements.length; i++) {
+                let checkbox = btnCheckElements[i]
+                if (checkbox.checked) {
+                    flavours.push(checkbox.value)
+                } 
             }
 
+            
+            
+            const dataToSend = {
+                productId,
+                flavours
+            }
+        
+            
             fetch('./Backend/addtoCart.php', {
                     method: 'POST',
                     headers: {
