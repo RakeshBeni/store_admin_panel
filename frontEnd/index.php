@@ -36,8 +36,8 @@ if (!isset($_SESSION['user'])) {
         }
 
         .cardcss {
-            width: 22rem;
-            height: 33rem;
+            width: 24rem;
+            height: 35rem;
         }
 
         .imagecss {
@@ -65,7 +65,7 @@ if (!isset($_SESSION['user'])) {
                 </ul>
                 <div class="mx-5">
 
-                    <a href="#" class="text-light " style="text-decoration: none;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16">
+                    <a href="./cart.php" class="text-light " style="text-decoration: none;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16">
                             <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
                         </svg> Cart <?php $query1 = mysqli_query($conn, "SELECT * FROM `customers` WHERE `userId` = '$_SESSION[userId]'");
                                     $row1 = mysqli_fetch_assoc($query1);
@@ -73,7 +73,7 @@ if (!isset($_SESSION['user'])) {
 
                                     $cartData = json_decode($row1['Cart'], true);
                                     echo $cartData['length']; ?></a>
-                                    
+
                 </div>
                 <form class="d-flex" role="search" id="searchForm">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -94,7 +94,7 @@ if (!isset($_SESSION['user'])) {
 
         <div class="row d-flex justify-content-around">
             <?php
-            $result = mysqli_query($conn, "SELECT * FROM `product`");
+            $result = mysqli_query($conn, "SELECT * FROM `product` WHERE `isvisible` = '1'");
             while ($row = mysqli_fetch_assoc($result)) {
             ?>
                 <div class="card bg-dark text-light border-light mb-3 cardcss">
@@ -102,16 +102,31 @@ if (!isset($_SESSION['user'])) {
                     <div class="card-body" style=" overflow: overlay;">
                         <h5 class="card-title"><?php echo $row['product'] ?> <span><?php echo $row['weight']; ?></span></h5>
                         <p class="card-text"><?php echo $row['description'] ?></p>
-                        <p class="card-text">( <?php $jsonData = json_decode($row['flavour'], true);
-                                                foreach ($jsonData as $key => $value) {
-                                                    foreach ($value as $value) {
-                                                        echo $value . ", ";
-                                                    }
-                                                }   ?>)</p>
+
+                        
+                        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                            
+                            
+                            </div>
+                            <?php $jsonData = json_decode($row['flavour'], true);
+                        foreach ($jsonData as $key => $value) {
+                            foreach ($value as $value) { 
+                                ?>
+                                <input type="checkbox" class="btn-check" id="<?php echo $value.$row['sr'];?>" autocomplete="off">
+                                <label class="btn btn-outline-secondary m-1" for="<?php echo $value.$row['sr'];?>"><?php echo $value;?></label>
+                          <?php  }
+                        }   ?>
                         <p class="card-text"><span class="text-light h3"> &#8377 <?php echo $row['sellingPrice'] ?>/-</span> MRP: <del><?php echo $row['mrp'] ?></del>/- <span class="text-success">(<?php $discount = (($row['mrp'] - $row['sellingPrice']) / $row['mrp']) * 100;
                                                                                                                                                                                                         echo round($discount) ?>% off)</span></p>
-                        <div class="sticky">
-                            <button class="btn btn-primary" onclick="addcart(this)" data-product="<?php echo $row['sr'] ?>">Add to cart</button>
+                        <div>
+                            <?php if($row['instock'] == '1'){
+                                echo " <button class='btn btn-primary' onclick='addcart(this)' data-product=' $row[sr]'>Add to cart</button>";
+                            }else{
+                                echo " <button class='btn btn-primary disabled' >Out Of Stock</button>";
+
+                            }
+                            ?>
+                           
 
                         </div>
                     </div>

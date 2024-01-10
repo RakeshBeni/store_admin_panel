@@ -89,11 +89,14 @@ include "./connection.php";
           <div class="card-body" style=" overflow: overlay;">
             <h5 class="card-title"><?php echo $row['product'] ?> <span><?php echo $row['weight']; ?></span></h5>
             <p class="card-text"><?php echo $row['description'] ?></p>
-            <p class="card-text">( <?php $jsonData = json_decode($row['flavour'], true); foreach ($jsonData as $key => $value) {
-           foreach ($value as $value) {
-            echo $value . ", ";
-        }
-        }   ?>)</p>
+            <?php $jsonData = json_decode($row['flavour'], true);
+                        foreach ($jsonData as $key => $value) {
+                            foreach ($value as $value) { 
+                                ?>
+                               
+                                <label class="btn btn-outline-secondary m-1" ><?php echo $value;?></label>
+                          <?php  }
+                        }   ?>
             <p class="card-text"><span class="text-light h3"> &#8377 <?php echo $row['sellingPrice'] ?>/-</span> MRP: <del><?php echo $row['mrp'] ?></del>/- <span class="text-success">(<?php $discount = (($row['mrp'] - $row['sellingPrice']) / $row['mrp']) * 100;
                                                                                                                                                                                           echo round($discount) ?>% off)</span></p>
             <a href="./changeProductDetails.php?sr=<?php echo $row['sr']; ?>"><button class="btn btn-primary m-1">Edit Details</button></a>
@@ -248,6 +251,7 @@ include "./connection.php";
 
  
   </script>
+  <script src="./index.js"></script>
 
 </body>
 
