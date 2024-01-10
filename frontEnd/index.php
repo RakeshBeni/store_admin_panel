@@ -75,10 +75,7 @@ if (!isset($_SESSION['user'])) {
                                     echo $cartData['length']; ?></a>
 
                 </div>
-                <form class="d-flex" role="search" id="searchForm">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
+                
 
                 <div class="form-inline my-2 my-lg-0 mx-2">
 
