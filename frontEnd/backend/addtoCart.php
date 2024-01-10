@@ -12,29 +12,41 @@ if (isset($_POST)) {
     $cartData = json_decode($row1['Cart'], true);
 
     $flavours = $data['flavours'];
-    
+
+
+
     foreach ($flavours as $flavour) {
 
-        // Add a new object to the "objects" array
-        $newObject = array("productId" => "$data[productId]","flavour" => "$flavour");
-        $cartData['length'] = $cartData['length']+1;
+        $bothExist = false;
+
+
+        foreach ($cartData['product'] as $item) {
+            if ($item['productId'] == $data['productId'] && $item['flavour'] == $flavour) {
+                $bothExist = true;
+                continue;
+            }
+        }
+
+        if ($bothExist) {
+            continue;
+        }
+        $newObject = array("productId" => "$data[productId]", "flavour" => "$flavour");
+        $cartData['length'] = $cartData['length'] + 1;
         $cartData['product'][] = $newObject;
         // Encode the updated data back to JSON
         $newJsonString = json_encode($cartData, JSON_PRETTY_PRINT);
-        
-    
-    
+
+
+
         $result = mysqli_query($conn, "UPDATE `customers` SET `Cart`='$newJsonString' WHERE `userId` = '$_SESSION[userId]' ");
     }
+
+
+
+
+
+
    
-    
-
-    
-
-
-    if($result){
         echo "success";
-    }
-
-
+    
 }

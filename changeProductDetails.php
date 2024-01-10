@@ -14,6 +14,39 @@ include "./connection.php";
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/css/style.css">
     <style>
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 5px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #dde0e3; 
+  border-radius: 5px;
+}
+
+    .custom-file-button input[type="file"] {
+      margin-left: -2px !important;
+    }
+
+    .custom-file-button input[type="file"]::-webkit-file-upload-button {
+      display: none;
+    }
+
+    .custom-file-button input[type="file"]::file-selector-button {
+      display: none;
+    }
+
+    .custom-file-button:hover label {
+      background-color: #dde0e3;
+      cursor: pointer;
+    }
         .custom-file-button input[type="file"] {
             margin-left: -2px !important;
         }
@@ -85,9 +118,10 @@ include "./connection.php";
             $result = mysqli_query($conn, "SELECT * FROM `product` WHERE `sr` = '$_GET[sr]'");
             $row = mysqli_fetch_assoc($result)
             ?>
-            <div class="card bg-dark text-light border-light mb-3" style="width: 22rem;">
-                <img src="<?php echo $row['imgUrl'] ?>" id="productImg" class="card-img-top" alt="...">
-                <div class="card-body">
+            <div class="card bg-dark text-light border-light mb-3" style="width: 24rem; height: 35rem">
+                <img src="<?php echo $row['imgUrl'] ?>" id="productImg" class="card-img-top" style="  object-fit: contain;
+  height: 50%;" alt="...">
+                <div class="card-body" style=" overflow: overlay;">
                     <h5 class="card-title"><span id="tital" contenteditable="true"> <?php echo $row['product'] ?> </span>  <span id="weight" contenteditable="true"><?php echo $row['weight']; ?></span></h5>
                     <p class="card-text" id="cart-description" contenteditable="true"><?php echo $row['description'] ?></p>
                     <p class="card-text"><span class="text-light h3"> &#8377 <span id="sellingPrice" contenteditable="true"><?php echo $row['sellingPrice'] ?></span>/-</span> MRP: <del id="mrp" contenteditable="true"><?php echo $row['mrp'] ?></del>/- <span class="text-success">(<?php $discount = (($row['mrp'] - $row['sellingPrice']) / $row['mrp']) * 100;

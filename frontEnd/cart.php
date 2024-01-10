@@ -16,7 +16,7 @@ if (!isset($_SESSION['user'])) {
     <title>cart</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="cart.css">
+    <link rel="stylesheet" href="cart.css">
 </head>
 
 <body class="bg-dark">
@@ -74,7 +74,7 @@ if (!isset($_SESSION['user'])) {
             </div>
 
             <?php
-         
+
             foreach ($cartData['product'] as $index => $product) {
                 $query2 = mysqli_query($conn, "SELECT * FROM `product` WHERE `sr` = '$product[productId]'");
                 $row = mysqli_fetch_assoc($query2);
@@ -92,10 +92,10 @@ if (!isset($_SESSION['user'])) {
                     <div class="product-price1"><?php echo $product['flavour'] ?></div>
                     <div class="product-price"><?php echo $row['sellingPrice'] ?></div>
                     <div class="product-quantity">
-                        <input type="number" value="1" min="1">
+                        <input class="text-center" style=" border-radius: 8px; border: none; height: 31px; width: 3rem;" type="number" value="1" min="1">
                     </div>
                     <div class="product-removal">
-                        <button class="remove-product" data-sr="<?php echo $index;?>">
+                        <button class="remove-product" data-sr="<?php echo $index; ?>">
                             Remove
                         </button>
                     </div>
@@ -135,12 +135,12 @@ if (!isset($_SESSION['user'])) {
     <script>
         /* Set rates + misc */
         var taxRate = 0.05;
-        var shippingRate = 15.00;
+        var shippingRate = 55.00;
         var fadeTime = 300;
 
 
         /* Assign actions */
-        $('.product-quantity input').change(function() {
+        $('.product-quantity input').on('input', function() {
             updateQuantity(this);
         });
 
@@ -167,10 +167,10 @@ if (!isset($_SESSION['user'])) {
 
             /* Update totals display */
             $('.totals-value').fadeOut(fadeTime, function() {
-                $('#cart-subtotal').html(subtotal.toFixed(2));
-                $('#cart-tax').html(tax.toFixed(2));
-                $('#cart-shipping').html(shipping.toFixed(2));
-                $('#cart-total').html(total.toFixed(2));
+                $('#cart-subtotal').html(subtotal.toFixed(0));
+                $('#cart-tax').html(tax.toFixed(0));
+                $('#cart-shipping').html(shipping.toFixed(0));
+                $('#cart-total').html(total.toFixed(0));
                 if (total == 0) {
                     $('.checkout').fadeOut(fadeTime);
                 } else {
@@ -192,7 +192,7 @@ if (!isset($_SESSION['user'])) {
             /* Update line price display and recalc cart totals */
             productRow.children('.product-line-price').each(function() {
                 $(this).fadeOut(fadeTime, function() {
-                    $(this).text(linePrice.toFixed(2));
+                    $(this).text(linePrice.toFixed(0));
                     recalculateCart();
                     $(this).fadeIn(fadeTime);
                 });
@@ -206,11 +206,11 @@ if (!isset($_SESSION['user'])) {
             let index = removeButton.dataset.sr;
 
             var dataToSend = {
-            index
-        };
-        console.log(index);
+                index
+            };
+            console.log(index);
 
-        fetch('./backend/editCart.php', {
+            fetch('./backend/editCart.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -227,7 +227,7 @@ if (!isset($_SESSION['user'])) {
                 .catch(error => {
                     console.error('Error:', error);
                 });
-            
+
         }
     </script>
 </body>
