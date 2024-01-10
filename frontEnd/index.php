@@ -159,13 +159,16 @@ if (!isset($_SESSION['user'])) {
                 } 
             }
 
-            
+            if(flavours.length<1){
+                alert('Select Flavour');
+                return;
+            }
             
             const dataToSend = {
                 productId,
                 flavours
             }
-        
+    
             
             fetch('./Backend/addtoCart.php', {
                     method: 'POST',
@@ -178,7 +181,7 @@ if (!isset($_SESSION['user'])) {
                     // Handle the response from the server, if needed
                     console.log(data);
                     if (data == "success") {
-                        location.reload();
+                       location.reload();
                     }
                 })
                 .catch(error => {
