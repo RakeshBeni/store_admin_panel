@@ -42,7 +42,7 @@ if (!isset($_SESSION['user'])) {
 
         .imagecss {
             object-fit: contain;
-            height: 50%;
+            height: 40%;
 
 
         }
