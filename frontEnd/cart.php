@@ -44,7 +44,7 @@ if (!isset($_SESSION['user'])) {
                                     echo $cartData['length']; ?></a>
 
                 </div>
-              
+
 
                 <div class="form-inline my-2 my-lg-0 mx-2">
 
@@ -87,8 +87,8 @@ if (!isset($_SESSION['user'])) {
                     </div>
                     <div class="product-price1"><?php echo $product['flavour'] ?></div>
                     <div class="product-price"><?php echo $row['sellingPrice'] ?></div>
-                    <div class="product-quantity">
-                        <input class="text-center" style=" border-radius: 8px; border: none; height: 31px; width: 3rem;" type="number" value="1" min="1">
+                    <div class="product-quantity ">
+                        <input class="text-center item-quantity" data-flavour="<?php echo $product['flavour'] ?>" data-productid="<?php echo $product['productId'] ?>" style=" border-radius: 8px; border: none; height: 31px; width: 3rem;" type="number" value="1" min="1">
                     </div>
                     <div class="product-removal">
                         <button class="remove-product" data-sr="<?php echo $index; ?>">
@@ -106,10 +106,7 @@ if (!isset($_SESSION['user'])) {
                     <label>Subtotal</label>
                     <div class="totals-value" id="cart-subtotal">71.97</div>
                 </div>
-                <div class="totals-item">
-                    <label>Tax (5%)</label>
-                    <div class="totals-value" id="cart-tax">3.60</div>
-                </div>
+
                 <div class="totals-item">
                     <label>Shipping</label>
                     <div class="totals-value" id="cart-shipping">15.00</div>
@@ -120,7 +117,7 @@ if (!isset($_SESSION['user'])) {
                 </div>
             </div>
 
-            <button class="checkout">Checkout</button>
+            <button class="checkout mb-5" onclick="placeOrder()">Checkout</button>
 
         </div>
     </div>
@@ -130,7 +127,7 @@ if (!isset($_SESSION['user'])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         /* Set rates + misc */
-        var taxRate = 0.05;
+
         var shippingRate = 55.00;
         var fadeTime = 300;
 
@@ -157,14 +154,14 @@ if (!isset($_SESSION['user'])) {
             });
 
             /* Calculate totals */
-            var tax = subtotal * taxRate;
+
             var shipping = (subtotal > 0 ? shippingRate : 0);
-            var total = subtotal + tax + shipping;
+            var total = subtotal + shipping;
 
             /* Update totals display */
             $('.totals-value').fadeOut(fadeTime, function() {
                 $('#cart-subtotal').html(subtotal.toFixed(0));
-                $('#cart-tax').html(tax.toFixed(0));
+                // $('#cart-tax').html(tax.toFixed(0));
                 $('#cart-shipping').html(shipping.toFixed(0));
                 $('#cart-total').html(total.toFixed(0));
                 if (total == 0) {
@@ -212,6 +209,40 @@ if (!isset($_SESSION['user'])) {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(dataToSend),
+                }).then(response => response.text())
+                .then(data => {
+                    // Handle the response from the server, if needed
+                    console.log(data);
+                    if (data == "success") {
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+        }
+
+        function placeOrder() {
+
+            const input1 = document.querySelectorAll(".item-quantity");
+            const quantityarray = [];
+            for(let i =0; i<input1.length;i++){
+                const quantity = input1[i].value;
+                const flavour = input1[i].dataset.flavour;
+                const productId = input1[i].dataset.productid;
+                const obj = {quantity,flavour,productId}
+                quantityarray.push(obj);
+            }
+
+            console.log(quantityarray)
+
+            fetch('./backend/placeOrder.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(quantityarray),
                 }).then(response => response.text())
                 .then(data => {
                     // Handle the response from the server, if needed
