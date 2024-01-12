@@ -170,6 +170,8 @@ if (!isset($_SESSION['user'])) {
         var shippingRate = 0;
         var fadeTime = 300;
 
+        var total = 0;
+
 
         /* Assign actions */
         $('.product-quantity input').on('input', function() {
@@ -195,7 +197,7 @@ if (!isset($_SESSION['user'])) {
             /* Calculate totals */
 
             var shipping = (subtotal > 0 ? shippingRate : 0);
-            var total = subtotal + shipping;
+             total = subtotal + shipping;
 
             /* Update totals display */
             $('.totals-value').fadeOut(fadeTime, function() {
@@ -265,6 +267,7 @@ if (!isset($_SESSION['user'])) {
         function placeOrder() {
             const phoneNo = document.getElementById('phoneNo').value;
             const address = document.getElementById('Address').value;
+        
             if (phoneNo < 5999999999 || phoneNo > 9999999999) {
                 console.log('invalid', phoneNo);
                 alert("Enter Vaild Phone No");
@@ -293,12 +296,12 @@ if (!isset($_SESSION['user'])) {
             }
 
             const dataToSend = {
+                total,
                 phoneNo,
                 address,
                 quantityarray
             }
-
-            // console.log(quantityarray)
+  
 
             fetch('./backend/placeOrder.php', {
                     method: 'POST',
