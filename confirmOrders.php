@@ -52,7 +52,7 @@ include "./connection.php";
     </style>
 </head>
 
-<body class="bg-dark text-light">
+<body class="bg-dark">
     <nav class="navbar bg-dark border-bottom border-body navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
@@ -69,11 +69,13 @@ include "./connection.php";
                                 <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z" />
                             </svg> New Order <?php echo mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) AS newOrders FROM orders  WHERE `orderConfirmation` = '0';"))['newOrders']; ?></a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="./confirmOrders.php"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16">
                                 <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z" />
                             </svg> Confirmed Order <?php echo mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) AS newOrders FROM orders  WHERE `orderConfirmation` = '1';"))['newOrders']; ?></a>
                     </li>
+
                 </ul>
 
             </div>
@@ -100,6 +102,7 @@ include "./connection.php";
                         <th scope="col">Phone No</th>
                         <th scope="col">Address</th>
                         <th scope="col">Order Value</th>
+                        <th scope="col">Description</th>
                         <th scope="col">Products</th>
                         <th scope="col">Processing</th>
                     </tr>
@@ -107,7 +110,8 @@ include "./connection.php";
                 <tbody>
                     <?php
                     $index = 0;
-                    $result = mysqli_query($conn, "SELECT * FROM orders  WHERE `orderConfirmation` = '0' ORDER BY sr DESC;");
+                    $result = mysqli_query($conn, "SELECT * FROM orders  WHERE `orderConfirmation` = '1
+                    ' ORDER BY sr DESC;");
                     while ($row = mysqli_fetch_assoc($result)) {
                         $index++;
                     ?>
@@ -120,6 +124,7 @@ include "./connection.php";
                             <td><?php echo $row['phoneNo']; ?></td>
                             <td><?php echo $row['address']; ?></td>
                             <td><?php echo $row['orderValue']; ?></td>
+                            <td><?php echo $row['confirmationDescription'] ?></td>
                             <td><!-- Button trigger modal -->
                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $row['sr'] ?>">
                                     Products
@@ -143,6 +148,7 @@ include "./connection.php";
 
                                                                 <th scope="col">Flavour</th>
                                                                 <th scope="col">Quantity</th>
+
                                                                 <th scope="col">Price</th>
                                                             </tr>
                                                         </thead>
@@ -161,6 +167,7 @@ include "./connection.php";
                                                                         echo $productWeight ?></td>
                                                                     <td><?php echo $product['flavour'] ?></td>
                                                                     <td><?php echo $product['quantity'] ?></td>
+
                                                                     <td><?php echo $product['price'] ?></td>
                                                                 </tr>
 
@@ -173,7 +180,7 @@ include "./connection.php";
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                             
+
                                             </div>
                                         </div>
                                     </div>
@@ -196,12 +203,11 @@ include "./connection.php";
                                                 <form action="./Backend/confirmOrder.php" method="post">
 
                                                     <input type="text" value="<?php echo $row['sr']; ?>" name="orderSr" hidden>
-
-
                                                     <div class="form-floating mb-3">
-                                                        <input class="form-control" id="floatingTextarea2" name="address" value="<?php echo  $row['address']; ?>" placeholder="Leave a comment here" style="height: 100px"></input>
-                                                        <label for="floatingTextarea2">Edit Address</label>
+                                                        <input type="text" name="trackingId" class="form-control" id="floatingInput" placeholder="name@example.com">
+                                                        <label for="floatingInput">Tracking Id</label>
                                                     </div>
+
                                                     <div class="form-floating">
                                                         <textarea class="form-control" name="description" placeholder="Leave a comment here" id="floatingText" style="height: 100px"></textarea>
                                                         <label for="floatingText">Description</label>
@@ -210,6 +216,7 @@ include "./connection.php";
 
                                             </div>
                                             <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary">Payment Received</button>
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                 <button type="submit" class="btn btn-success">Confirm Order</button>
                                                 </form>
@@ -229,12 +236,6 @@ include "./connection.php";
 
 
     </div>
-
-
-
-
-  
-
 
 
 
