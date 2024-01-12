@@ -53,6 +53,14 @@ if (!isset($_SESSION['user'])) {
             </div>
         </div>
     </nav>
+
+
+    <div id="succes-alert" class="alert alert-success alert-dismissible fade show container <?php if(!(isset($_GET['order']))){ echo 'd-none';}?>" role="alert">
+        <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16">
+                <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z" />
+            </svg> Success!</strong> Thank you for choosing us!. We will call you for order confirmation.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <div class="container text-light mt-5">
         <h1 class="text-center m-5" style="margin-bottom: 30px;">Cart Details</h1>
 
@@ -117,8 +125,39 @@ if (!isset($_SESSION['user'])) {
                 </div>
             </div>
 
-            <button class="checkout mb-5" onclick="placeOrder()">Checkout</button>
+            <button class="checkout mb-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Place Order</button>
 
+        </div>
+
+
+        <!-- Button trigger modal -->
+
+
+        <!-- Modal -->
+        <div class="modal fade " style="backdrop-filter: blur(8px); color:black;" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Enter Details</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="phoneNo" placeholder="Phone NO">
+                            <label for="phoneNo">Phone No</label>
+                        </div>
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Address" id="Address" style="height: 100px"></textarea>
+                            <label for="Address">Address</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="placeOrder()">Confire Order</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
@@ -128,7 +167,7 @@ if (!isset($_SESSION['user'])) {
     <script>
         /* Set rates + misc */
 
-        var shippingRate = 55.00;
+        var shippingRate = 0;
         var fadeTime = 300;
 
 
@@ -224,31 +263,57 @@ if (!isset($_SESSION['user'])) {
         }
 
         function placeOrder() {
+            const phoneNo = document.getElementById('phoneNo').value;
+            const address = document.getElementById('Address').value;
+            if (phoneNo < 5999999999 || phoneNo > 9999999999) {
+                console.log('invalid', phoneNo);
+                alert("Enter Vaild Phone No");
+                return;
+            }
+
+
+            if (address.length < 5) {
+                alert("Enter Address");
+                return;
+            }
+
 
             const input1 = document.querySelectorAll(".item-quantity");
             const quantityarray = [];
-            for(let i =0; i<input1.length;i++){
+            for (let i = 0; i < input1.length; i++) {
                 const quantity = input1[i].value;
                 const flavour = input1[i].dataset.flavour;
                 const productId = input1[i].dataset.productid;
-                const obj = {quantity,flavour,productId}
+                const obj = {
+                    quantity,
+                    flavour,
+                    productId
+                }
                 quantityarray.push(obj);
             }
 
-            console.log(quantityarray)
+            const dataToSend = {
+                phoneNo,
+                address,
+                quantityarray
+            }
+
+            // console.log(quantityarray)
 
             fetch('./backend/placeOrder.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(quantityarray),
+                    body: JSON.stringify(dataToSend),
                 }).then(response => response.text())
                 .then(data => {
                     // Handle the response from the server, if needed
                     console.log(data);
                     if (data == "success") {
-                        location.reload();
+                        window.location.href = "./cart.php?order=success";
+
+
                     }
                 })
                 .catch(error => {

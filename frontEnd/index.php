@@ -37,7 +37,7 @@ if (!isset($_SESSION['user'])) {
 
         .cardcss {
             width: 24rem;
-            height: 35rem;
+            height: 38rem;
         }
 
         .imagecss {
