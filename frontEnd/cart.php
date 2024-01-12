@@ -96,7 +96,7 @@ if (!isset($_SESSION['user'])) {
                     <div class="product-price1"><?php echo $product['flavour'] ?></div>
                     <div class="product-price"><?php echo $row['sellingPrice'] ?></div>
                     <div class="product-quantity ">
-                        <input class="text-center item-quantity" data-flavour="<?php echo $product['flavour'] ?>" data-productid="<?php echo $product['productId'] ?>" style=" border-radius: 8px; border: none; height: 31px; width: 3rem;" type="number" value="1" min="1">
+                        <input class="text-center item-quantity" data-price="<?php echo $row['sellingPrice'] ?>" data-flavour="<?php echo $product['flavour'] ?>" data-productid="<?php echo $product['productId'] ?>" style=" border-radius: 8px; border: none; height: 31px; width: 3rem;" type="number" value="1" min="1">
                     </div>
                     <div class="product-removal">
                         <button class="remove-product" data-sr="<?php echo $index; ?>">
@@ -285,12 +285,14 @@ if (!isset($_SESSION['user'])) {
             const quantityarray = [];
             for (let i = 0; i < input1.length; i++) {
                 const quantity = input1[i].value;
+                const price = input1[i].dataset.price;
                 const flavour = input1[i].dataset.flavour;
                 const productId = input1[i].dataset.productid;
                 const obj = {
                     quantity,
                     flavour,
-                    productId
+                    productId,
+                    price
                 }
                 quantityarray.push(obj);
             }
