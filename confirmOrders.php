@@ -213,10 +213,13 @@ include "./connection.php";
                                                         <label for="floatingText">Description</label>
                                                     </div>
 
-
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-primary">Payment Received</button>
+                                                <?php if( $row['payment'] === '0'){
+                                                    echo ' <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#paymentRecived" data-bs-whatever="'.$row['sr'].'">Payment Received</button>';
+                                                    }?>
+                                                   
+                                               
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                 <button type="submit" class="btn btn-success">Confirm Order</button>
                                                 </form>
@@ -239,9 +242,50 @@ include "./connection.php";
 
 
 
+    <div class="modal fade" id="paymentRecived" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="color:black">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="./Backend/paymentRec.php" method="post" enctype="multipart/form-data">
+            <input type="text" id="srValue" name="orderId" value="" hidden>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">ScreenShort</label>
+            <input type="file" name="paymentImage" accept="image/*" class="form-control" id="recipient-name">
+          </div>
+      
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="Submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script>
+        var exampleModal = document.getElementById('paymentRecived')
+exampleModal.addEventListener('show.bs.modal', function (event) {
+  // Button that triggered the modal
+  var button = event.relatedTarget
+  // Extract info from data-bs-* attributes
+  var recipient = button.getAttribute('data-bs-whatever')
+ 
+    const srvalue = document.getElementById('srValue');
+    srvalue.setAttribute("value", recipient);
+
+})
+    </script>
 
 </body>
 
