@@ -84,7 +84,7 @@ include "./connection.php";
                 <tbody>
                     <?php
                     $index = 0;
-                    $result = mysqli_query($conn, "SELECT * FROM orders  WHERE `orderConfirmation` = '1' AND `trakingNo` IS NOT NULL
+                    $result = mysqli_query($conn, "SELECT * FROM orders  WHERE `orderConfirmation` = '1' AND `trakingNo` IS NOT NULL AND `FinalStatus` IS NULL
                      ORDER BY sr DESC;");
                     while ($row = mysqli_fetch_assoc($result)) {
                         $index++;
@@ -158,7 +158,9 @@ include "./connection.php";
                                             </div>
                                             <div class="modal-footer">
                                                 <?php if ($row['payment'] === '1') {
-                                                    echo ' <button type="button" class="btn  btn-primary"  data-bs-toggle="modal" data-bs-target="#paymentImage" data-bs-image="' . $row['paymentImage'] . '">Payment Received</button>';
+                                                    echo ' <button type="button" class="btn  btn-success"  data-bs-toggle="modal" data-bs-target="#paymentImage" data-bs-image="' . $row['paymentImage'] . '">Payment Image</button>';
+                                                }else{
+                                                    echo ' <button type="button" class="btn  btn-primary"  data-bs-toggle="modal" data-bs-target="#paymentRecived" data-bs-sr="'.$row['sr'].'">Payment Received</button>';
                                                 } ?>
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
@@ -168,7 +170,8 @@ include "./connection.php";
                                 </div>
                             </td>
                             <td>
-                                <button class="btn btn-primary btn-sm"> Process</button>
+
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#processing" data-bs-sr="<?php echo $row['sr'] ?>"> Process</button>
                             </td>
                         </tr>
 
@@ -193,6 +196,7 @@ include "./connection.php";
                 </div>
                 <div class="modal-body">
                     <form action="./Backend/paymentRec.php" method="post" enctype="multipart/form-data">
+                        <input type="text" name="Dispatch" value="" hidden>
                         <input type="text" id="srValue" name="orderId" value="" hidden>
                         <div class="mb-3">
                             <label for="recipient-name" class="col-form-label">ScreenShort</label>
@@ -227,7 +231,44 @@ include "./connection.php";
             </div>
         </div>
     </div>
-    
+
+
+
+    <div class="modal fade" id="processing" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="color:black">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="./Backend/delivered.php" method="post" >
+
+                        <input type="text" id="srValue11" name="orderId" value="" hidden>
+                        <div class="btn-group col-12 mb-3" role="group" aria-label="Basic radio toggle button group">
+                            <input type="radio" class="btn-check" name="Status" value="delivered" id="btnradio1" autocomplete="off" checked>
+                            <label class="btn btn-outline-success btn-lg" for="btnradio1">Delivered</label>
+
+                            <input type="radio" class="btn-check" name="Status" value="cancel" id="btnradio2" autocomplete="off">
+                            <label class="btn btn-outline-danger btn-lg" for="btnradio2">Cancel</label>
+                        </div>
+
+                        <div class="form-floating">
+                            <textarea class="form-control" name="description" placeholder="Leave a comment here" id="floatingText" style="height: 100px"></textarea>
+                            <label for="floatingText">Description</label>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="Submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
 
@@ -235,6 +276,21 @@ include "./connection.php";
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
+
+          
+var exampleModal = document.getElementById('paymentRecived')
+        exampleModal.addEventListener('show.bs.modal', function(event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            var recipient = button.getAttribute('data-bs-sr')
+
+            const srvalue = document.getElementById('srValue');
+            srvalue.setAttribute("value", recipient);
+
+        })
+
+
         var exampleModal = document.getElementById('paymentImage')
         exampleModal.addEventListener('show.bs.modal', function(event) {
             // Button that triggered the modal
@@ -244,6 +300,19 @@ include "./connection.php";
 
             const srvalue = document.getElementById('paymentImage1');
             srvalue.setAttribute("src", recipient);
+
+        })
+        var exampleModal = document.getElementById('processing')
+        exampleModal.addEventListener('show.bs.modal', function(event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            var recipient = button.getAttribute('data-bs-sr')
+            console.log(recipient)
+
+            const srvalue = document.getElementById('srValue11');
+            console.log(srvalue)
+            srvalue.setAttribute("value", recipient);
 
         })
     </script>

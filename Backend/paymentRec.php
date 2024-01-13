@@ -24,8 +24,14 @@ if (isset($_POST)) {
             echo "success";
         }
     }
+    if(isset($_POST['Dispatch'])){
 
-    header('location:../confirmOrders.php');
+        header('location:../dispatchedOrders.php');
+    }else{
+
+        
+        header('location:../confirmOrders.php');
+    }
 
 
 }

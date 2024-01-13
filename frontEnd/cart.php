@@ -144,11 +144,11 @@ if (!isset($_SESSION['user'])) {
                     <div class="modal-body">
 
                         <div class="form-floating mb-3">
-                            <input type="number" class="form-control" id="phoneNo" placeholder="Phone NO">
+                            <input type="number" class="form-control" value="<?php echo $row1['phoneNo'] ?>" id="phoneNo" placeholder="Phone NO">
                             <label for="phoneNo">Phone No</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control" placeholder="Address" id="Address" style="height: 100px"></textarea>
+                            <textarea class="form-control" placeholder="Address"  id="Address" style="height: 100px"> <?php echo $row1['address'] ?></textarea>
                             <label for="Address">Address</label>
                         </div>
                     </div>

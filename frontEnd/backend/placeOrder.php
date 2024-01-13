@@ -15,6 +15,8 @@ if (isset($_POST)) {
     $phoneNo = $data['phoneNo'];
     
     $newJsonString = json_encode($data['quantityarray'], JSON_PRETTY_PRINT);
+
+    $result1 = mysqli_query($conn, "UPDATE `customers` SET `phoneNo`='$phoneNo',`address`='$address' WHERE `userId` = '$_SESSION[userId]'");
  
     $result = mysqli_query($conn, "INSERT INTO `orders` (`customersId`, `orders`, `phoneNo`, `address`, `timestamp`, `orderValue`) VALUES ('$_SESSION[userId]','$newJsonString', '$phoneNo', '$address','$ddate', '$total') ");
     $emptyCart = '{"length":"0", "product":[]}';
