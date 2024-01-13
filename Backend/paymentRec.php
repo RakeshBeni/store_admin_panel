@@ -18,7 +18,7 @@ if (isset($_POST)) {
 
         
 
-        $resutl = mysqli_query($conn, "UPDATE `orders` SET `payment`='1', `payemtnImage`='$photolink' WHERE `sr` = '$_POST[orderId]'");
+        $resutl = mysqli_query($conn, "UPDATE `orders` SET `payment`='1', `paymentImage`='$photolink' WHERE `sr` = '$_POST[orderId]'");
 
         if ($resutl) {
             echo "success";

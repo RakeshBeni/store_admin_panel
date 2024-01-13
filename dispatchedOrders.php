@@ -53,13 +53,14 @@ include "./connection.php";
 </head>
 
 <body class="bg-dark">
-<?php include './navbar.php';?>
+    <?php include './navbar.php'; ?>
 
     <div class="container mt-4">
         <center>
-            <div class="btn-group"><button type="button" class="btn btn-secondary btn-lg shadow" disabled><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16">
-                        <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z" />
-                    </svg> &nbsp View Order</button>
+            <div class="btn-group"><button type="button" class="btn btn-secondary btn-lg shadow" disabled><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bus-front" viewBox="0 0 16 16">
+                        <path d="M5 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0m8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6-1a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2zm1-6c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9s3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44 44 0 0 0 8 4m0-1c-1.837 0-3.353.107-4.448.22a.5.5 0 1 1-.104-.994A44 44 0 0 1 8 2c1.876 0 3.426.109 4.552.226a.5.5 0 1 1-.104.994A43 43 0 0 0 8 3" />
+                        <path d="M15 8a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1V2.64c0-1.188-.845-2.232-2.064-2.372A44 44 0 0 0 8 0C5.9 0 4.208.136 3.064.268 1.845.408 1 1.452 1 2.64V4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1v3.5c0 .818.393 1.544 1 2v2a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5V14h6v1.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-2c.607-.456 1-1.182 1-2zM8 1c2.056 0 3.71.134 4.822.261.676.078 1.178.66 1.178 1.379v8.86a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5V2.64c0-.72.502-1.301 1.178-1.379A43 43 0 0 1 8 1" />
+                    </svg> &nbsp Dispatched Order</button>
 
 
             </div>
@@ -99,7 +100,11 @@ include "./connection.php";
                             <td><?php echo $row['orderValue']; ?></td>
                             <td><?php echo $row['confirmationDescription'] ?></td>
                             <td><!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $row['sr'] ?>">
+                                <button type="button" class="btn <?php if ($row['payment'] === '0') {
+                                                                        echo 'btn-outline-success';
+                                                                    } else {
+                                                                        echo 'btn-success';
+                                                                    } ?> btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $row['sr'] ?>">
                                     Products
                                 </button>
 
@@ -112,16 +117,16 @@ include "./connection.php";
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                                <h3 class="text-success">Track Id : <?php echo $row['trakingNo'] ?></h3>
+                                                <p>Description: <?php echo $row['dispatchDescription'] ?></p>
                                                 <div class="m-5">
                                                     <table class="table table-striped border border-secondary text-center">
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Index</th>
                                                                 <th scope="col">Product</th>
-
                                                                 <th scope="col">Flavour</th>
                                                                 <th scope="col">Quantity</th>
-
                                                                 <th scope="col">Price</th>
                                                             </tr>
                                                         </thead>
@@ -152,6 +157,9 @@ include "./connection.php";
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
+                                                <?php if ($row['payment'] === '1') {
+                                                    echo ' <button type="button" class="btn  btn-primary"  data-bs-toggle="modal" data-bs-target="#paymentImage" data-bs-image="' . $row['paymentImage'] . '">Payment Received</button>';
+                                                } ?>
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
                                             </div>
@@ -159,47 +167,8 @@ include "./connection.php";
                                     </div>
                                 </div>
                             </td>
-                            <td><!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#examplel<?php echo $row['sr'] ?>">
-                                    Process
-                                </button>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="examplel<?php echo $row['sr'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog " style="color:black">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Order</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="./Backend/confirmOrder.php" method="post">
-
-                                                    <input type="text" value="<?php echo $row['sr']; ?>" name="orderSr" hidden>
-                                                    <div class="form-floating mb-3">
-                                                        <input type="text" name="trackingId" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                                        <label for="floatingInput">Tracking Id</label>
-                                                    </div>
-
-                                                    <div class="form-floating">
-                                                        <textarea class="form-control" name="description" placeholder="Leave a comment here" id="floatingText" style="height: 100px"></textarea>
-                                                        <label for="floatingText">Description</label>
-                                                    </div>
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <?php if( $row['payment'] === '0'){
-                                                    echo ' <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#paymentRecived" data-bs-whatever="'.$row['sr'].'">Payment Received</button>';
-                                                    }?>
-                                                   
-                                               
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-success">Confirm Order</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <td>
+                                <button class="btn btn-primary btn-sm"> Process</button>
                             </td>
                         </tr>
 
@@ -216,49 +185,68 @@ include "./connection.php";
 
 
     <div class="modal fade" id="paymentRecived" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" style="color:black">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="./Backend/paymentRec.php" method="post" enctype="multipart/form-data">
-            <input type="text" id="srValue" name="orderId" value="" hidden>
-          <div class="mb-3">
-            <label for="recipient-name" class="col-form-label">ScreenShort</label>
-            <input type="file" name="paymentImage" accept="image/*" class="form-control" id="recipient-name">
-          </div>
-      
+        <div class="modal-dialog" style="color:black">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="./Backend/paymentRec.php" method="post" enctype="multipart/form-data">
+                        <input type="text" id="srValue" name="orderId" value="" hidden>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">ScreenShort</label>
+                            <input type="file" name="paymentImage" accept="image/*" class="form-control" id="recipient-name">
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="Submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="Submit" class="btn btn-primary">Submit</button>
-        </form>
-      </div>
     </div>
-  </div>
-</div>
+    <div class="modal fade" id="paymentImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " style="color:black">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="paymentImage1" width="100%" src="" alt="payment Image">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <!-- <button type="Submit" class="btn btn-primary">Submit</button> -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
 
 
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        var exampleModal = document.getElementById('paymentImage')
+        exampleModal.addEventListener('show.bs.modal', function(event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            var recipient = button.getAttribute('data-bs-image')
 
-    <!-- <script>
-        var exampleModal = document.getElementById('paymentRecived')
-exampleModal.addEventListener('show.bs.modal', function (event) {
-  // Button that triggered the modal
-  var button = event.relatedTarget
-  // Extract info from data-bs-* attributes
-  var recipient = button.getAttribute('data-bs-whatever')
- 
-    const srvalue = document.getElementById('srValue');
-    srvalue.setAttribute("value", recipient);
+            const srvalue = document.getElementById('paymentImage1');
+            srvalue.setAttribute("src", recipient);
 
-})
-    </script> -->
+        })
+    </script>
 
 </body>
 
