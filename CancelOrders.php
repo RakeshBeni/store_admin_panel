@@ -57,10 +57,10 @@ include "./connection.php";
 
     <div class="container mt-4">
         <center>
-            <div class="btn-group"><button type="button" class="btn btn-secondary btn-lg shadow" disabled><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-file-earmark-excel" viewBox="0 0 16 16">
-  <path d="M5.884 6.68a.5.5 0 1 0-.768.64L7.349 10l-2.233 2.68a.5.5 0 0 0 .768.64L8 10.781l2.116 2.54a.5.5 0 0 0 .768-.641L8.651 10l2.233-2.68a.5.5 0 0 0-.768-.64L8 9.219l-2.116-2.54z"/>
-  <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
-</svg> &nbsp Cancel Order</button>
+            <div class="btn-group"><button type="button" class="btn btn-secondary btn-lg shadow" disabled><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-check2-circle" viewBox="0 0 16 16">
+  <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0"/>
+  <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
+</svg> &nbsp Successfull Order</button>
 
 
             </div>
@@ -76,7 +76,6 @@ include "./connection.php";
                         <th scope="col">Phone No</th>
                         <th scope="col">Address</th>
                         <th scope="col">Order Value</th>
-
                         <th scope="col">Products</th>
                         <th scope="col">Processing</th>
                     </tr>
@@ -98,7 +97,6 @@ include "./connection.php";
                             <td><?php echo $row['phoneNo']; ?></td>
                             <td><?php echo $row['address']; ?></td>
                             <td><?php echo $row['orderValue']; ?></td>
-                       
                             <td><!-- Button trigger modal -->
                                 <button type="button" class="btn <?php if ($row['payment'] === '0') {
                                                                         echo 'btn-outline-success';
@@ -171,7 +169,19 @@ include "./connection.php";
                             </td>
                             <td>
 
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#processing" data-bs-sr="<?php echo $row['sr'] ?>"> Process</button>
+                            <?php   $result3 = mysqli_query($conn, "SELECT * FROM `deliveredorder` WHERE `OrderId` = '$row[sr]'"); 
+                                $row3 = mysqli_fetch_assoc($result3);
+                                
+                                if($row3['feedBack'] == null){
+
+                                    echo "<button class='btn btn-outline-primary btn-sm ' data-bs-toggle='modal' data-bs-target='#processing' data-bs-sr=' ".$row['sr'] ."'> FeedBack</button>";
+                                }else{
+                                    
+                                    echo "<button class='btn btn-primary btn-sm ' data-bs-toggle='modal' data-bs-target='#feedback' data-bs-feedback=' ".$row3['feedBack'] ."'> FeedBack</button>";
+                                }
+                                
+                                
+                                ?>
                             </td>
                         </tr>
 
@@ -187,7 +197,31 @@ include "./connection.php";
 
 
 
-    
+    <div class="modal fade" id="paymentRecived" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="color:black">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="./Backend/paymentRec.php" method="post" enctype="multipart/form-data">
+                        <input type="text" name="Dispatch" value="" hidden>
+                        <input type="text" id="srValue" name="orderId" value="" hidden>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">ScreenShort</label>
+                            <input type="file" name="paymentImage" accept="image/*" class="form-control" id="recipient-name">
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="Submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="paymentImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog " style="color:black">
             <div class="modal-content">
@@ -218,15 +252,34 @@ include "./connection.php";
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="./Backend/delivered.php" method="post" >
-
-                        <input type="text" id="srValue11" name="orderId" value="" hidden>
+                    <form action="./Backend/cancelOrderProcess.php" method="post" >
+                        <input type="text" id="srValue11" name="OrderNo" value="" hidden>
 
                         <div class="form-floating">
+                            
                             <textarea class="form-control" name="description" placeholder="Leave a comment here" id="floatingText" style="height: 100px"></textarea>
                             <label for="floatingText">Description</label>
                         </div>
 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="Submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="feedback" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="color:black">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">FeedBack</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                   <h5 id="feedbackText"></h5>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -246,16 +299,15 @@ include "./connection.php";
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
 
-          
-var exampleModal = document.getElementById('paymentRecived')
+var exampleModal = document.getElementById('feedback')
         exampleModal.addEventListener('show.bs.modal', function(event) {
-            // Button that triggered the modal
+            
             var button = event.relatedTarget
-            // Extract info from data-bs-* attributes
-            var recipient = button.getAttribute('data-bs-sr')
+           
+            var recipient = button.getAttribute('data-bs-feedback')
 
-            const srvalue = document.getElementById('srValue');
-            srvalue.setAttribute("value", recipient);
+             document.getElementById('feedbackText').innerText = recipient;
+           
 
         })
 
