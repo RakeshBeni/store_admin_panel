@@ -274,9 +274,7 @@ include "./connection.php";
 
         var exampleModal = document.getElementById('paymentImage')
         exampleModal.addEventListener('show.bs.modal', function(event) {
-            // Button that triggered the modal
             var button = event.relatedTarget
-            // Extract info from data-bs-* attributes
             var recipient = button.getAttribute('data-bs-image')
 
             const srvalue = document.getElementById('paymentImage1');
@@ -285,9 +283,9 @@ include "./connection.php";
         })
         var exampleModal = document.getElementById('processing')
         exampleModal.addEventListener('show.bs.modal', function(event) {
-            // Button that triggered the modal
+            
             var button = event.relatedTarget
-            // Extract info from data-bs-* attributes
+           
             var recipient = button.getAttribute('data-bs-sr')
 
             const srvalue = document.getElementById('srValue11');
@@ -296,9 +294,9 @@ include "./connection.php";
         })
         var exampleModal = document.getElementById('feedback')
         exampleModal.addEventListener('show.bs.modal', function(event) {
-            // Button that triggered the modal
+            
             var button = event.relatedTarget
-            // Extract info from data-bs-* attributes
+           
             var recipient = button.getAttribute('data-bs-feedback')
 
              document.getElementById('feedbackText').innerText = recipient;
