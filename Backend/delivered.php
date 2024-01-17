@@ -14,7 +14,7 @@ if (isset($_POST)) {
 
         $result3 = mysqli_query($conn, "INSERT INTO `cancelorders`( `OrderId`, `customerId`, `Remarks`) VALUES ('$_POST[orderId]','$row2[customersId]','$_POST[description]')");
     }else{
-        $result3 = mysqli_query($conn, "INSERT INTO `deliveredorder`( `OrderId`, `customerId`, `feedBack`) VALUES ('$_POST[orderId]','$row2[customersId]','$_POST[description]')");
+        $result3 = mysqli_query($conn, "INSERT INTO `deliveredorder`( `OrderId`, `customerId`) VALUES ('$_POST[orderId]','$row2[customersId]')");
 
     }
 

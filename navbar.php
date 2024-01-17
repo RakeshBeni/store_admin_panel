@@ -45,12 +45,18 @@
                             final <?php echo mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) AS newOrders FROM orders  WHERE `orderConfirmation` = '1' AND `trakingNo` IS NOT NULL AND `FinalStatus` IS NOT NULL ;"))['newOrders']; ?>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="dropdown-item" href="#">Delivered <?php echo mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) AS newOrders FROM orders  WHERE `orderConfirmation` = '1' AND `trakingNo` IS NOT NULL AND `FinalStatus` = 'delivered' ;"))['newOrders']; ?></a></li>
+                            <li><a class="dropdown-item" href="./successfullOrders.php"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-circle" viewBox="0 0 16 16">
+  <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0"/>
+  <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
+</svg> Delivered <?php echo mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) AS newOrders FROM orders  WHERE `orderConfirmation` = '1' AND `trakingNo` IS NOT NULL AND `FinalStatus` = 'delivered' ;"))['newOrders']; ?></a></li>
 
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="#">Cancel <?php echo mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) AS newOrders FROM orders  WHERE `orderConfirmation` = '1' AND `trakingNo` IS NOT NULL AND `FinalStatus` = 'cancel' ;"))['newOrders']; ?></a></li>
+                            <li><a class="dropdown-item" href="./CancelOrders.php"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-excel" viewBox="0 0 16 16">
+  <path d="M5.884 6.68a.5.5 0 1 0-.768.64L7.349 10l-2.233 2.68a.5.5 0 0 0 .768.64L8 10.781l2.116 2.54a.5.5 0 0 0 .768-.641L8.651 10l2.233-2.68a.5.5 0 0 0-.768-.64L8 9.219l-2.116-2.54z"/>
+  <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+</svg> Cancel <?php echo mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) AS newOrders FROM orders  WHERE `orderConfirmation` = '1' AND `trakingNo` IS NOT NULL AND `FinalStatus` = 'cancel' ;"))['newOrders']; ?></a></li>
                         </ul>
                     </div>
                 </li>
