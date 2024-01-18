@@ -110,7 +110,7 @@ include "./connection.php";
                     <div class=" mb-3">
                         <select class="form-control multiple-select bg-dark " multiple>
                             <?php
-                            $con = include "./utils/personal.php";
+                             include "./utils/personal.php";
                             $result = mysqli_query($con, "SELECT * FROM `category and flavours`");
                             while ($row2 = mysqli_fetch_assoc($result)) {  ?>
                                 <option class="<?php echo $row2['flavour'] ?>" value="<?php echo $row2['flavour'] ?>"><?php echo $row2['flavour'] ?></option>

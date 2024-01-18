@@ -4,6 +4,10 @@ if (isset($_POST)) {
 
     print_r($_POST);
 
+    
+    date_default_timezone_set("Asia/Calcutta");
+    $ddate = date('Y-m-d H:i:s');
+
 
     $resutl = mysqli_query($conn, "UPDATE `orders` SET `FinalStatus`='$_POST[Status]',`finalDescription`='$_POST[description]' WHERE `sr` = '$_POST[orderId]'");
 
@@ -12,9 +16,9 @@ if (isset($_POST)) {
 
     if($_POST['Status']=="cancel"){
 
-        $result3 = mysqli_query($conn, "INSERT INTO `cancelorders`( `OrderId`, `customerId`) VALUES ('$_POST[orderId]','$row2[customersId]')");
+        $result3 = mysqli_query($conn, "INSERT INTO `cancelorders`( `OrderId`, `customerId` , `TIMESTAMP` ) VALUES ('$_POST[orderId]','$row2[customersId]', '$ddate')");
     }else{
-        $result3 = mysqli_query($conn, "INSERT INTO `deliveredorder`( `OrderId`, `customerId`) VALUES ('$_POST[orderId]','$row2[customersId]')");
+        $result3 = mysqli_query($conn, "INSERT INTO `deliveredorder`( `OrderId`, `customerId`, `TIMESTAMP`) VALUES ('$_POST[orderId]','$row2[customersId]', '$ddate')");
 
     }
 
