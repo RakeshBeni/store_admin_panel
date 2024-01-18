@@ -52,7 +52,7 @@ include "./connection.php";
   </style>
 </head>
 
-<body class="bg-dark">
+<body class="bg-dark text-ligth">
   <?php include './navbar.php';?>
 
   <div class="container mt-4">
@@ -149,7 +149,7 @@ include "./connection.php";
             <div class=" mb-3 bg-dark">
               <select class="form-control multiple-select bg-dark" multiple>
                 <?php
-                $con = include "./utils/personal.php";
+                 include "./utils/personal.php";
                 $result = mysqli_query($con, "SELECT * FROM `category and flavours`");
                 while ($row2 = mysqli_fetch_assoc($result)) {  ?>
                   <option class="<?php echo $row2['flavour'] ?>" value="<?php echo $row2['flavour'] ?>"><?php echo $row2['flavour'] ?></option>
@@ -193,45 +193,7 @@ include "./connection.php";
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-  <script>
-    function changeStock(a) {
-      const productSr = a.getAttribute('data-sr');
-      const productStatus = a.getAttribute('data-status');
-      const type = a.getAttribute('data-type');
 
-      const dataToSend = {
-        type,
-        productSr,
-        productStatus
-      }
-
-      fetch('./Backend/editProductStatus.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(dataToSend),
-        }).then(response => response.text())
-        .then(data => {
-          // Handle the response from the server, if needed
-          console.log(data);
-          if (data == "success") {
-            location.reload();
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-
-
-    }
-
-
-
-    function addProduct() {
-      $('#addProductModal').modal('show')
-    }
-  </script>
   <script src="./index.js"></script>
 
 </body>

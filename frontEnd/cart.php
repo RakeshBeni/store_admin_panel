@@ -50,10 +50,12 @@ if (!isset($_SESSION['user'])) {
 
 <body class="bg-dark">
 
-    <?php include './navbar.php'?>
+    <?php include './navbar.php' ?>
 
 
-    <div id="succes-alert" class="alert alert-success alert-dismissible fade show container <?php if(!(isset($_GET['order']))){ echo 'd-none';}?>" role="alert">
+    <div id="succes-alert" class="alert alert-success alert-dismissible fade show container <?php if (!(isset($_GET['order']))) {
+                                                                                                echo 'd-none';
+                                                                                            } ?>" role="alert">
         <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16">
                 <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z" />
             </svg> Success!</strong> Thank you for choosing us!. We will call you for order confirmation.
@@ -105,24 +107,43 @@ if (!isset($_SESSION['user'])) {
                 </div>
 
             <?php } ?>
+            <div class="d-flex">
 
 
-            <div class="totals">
-                <div class="totals-item">
-                    <label>Subtotal</label>
-                    <div class="totals-value" id="cart-subtotal">71.97</div>
+                <div class="col-md-6 col-12 ">
+                    <div class="form-floating mb-3 text-dark">
+                        <input type="email" class="form-control " id="couponInput" placeholder="name@example.com">
+                        <label for="floatingInput ">Enter Coupon</label>
+
+                        <div id="validationServerUsernameFeedback" class="invalid-feedback">
+                            InValid Coupon.
+                        </div>
+                    </div>
                 </div>
 
-                <div class="totals-item">
-                    <label>Shipping</label>
-                    <div class="totals-value" id="cart-shipping">15.00</div>
+
+                <div class="totals col-md-6 col-12">
+                    <div class="totals-item">
+                        <label>Subtotal</label>
+                        <div class="totals-value" id="cart-subtotal">00.00</div>
+                    </div>
+
+                    <div class="totals-item">
+                        <label>Coupon Discount</label>
+                        <div class="totals-value " style="    color: #49c249;" id="cart-tax">0</div>
+                    </div>
+
+                    <div class="totals-item">
+                        <label>Shipping</label>
+                        <div class="totals-value" id="cart-shipping">00.00</div>
+                    </div>
+                    <div class="totals-item totals-item-total">
+                        <label>Grand Total</label>
+                        <div class="totals-value" id="cart-total">00.00</div>
+                    </div>
                 </div>
-                <div class="totals-item totals-item-total">
-                    <label>Grand Total</label>
-                    <div class="totals-value" id="cart-total">90.57</div>
-                </div>
+
             </div>
-
             <button class="checkout mb-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Place Order</button>
 
         </div>
@@ -146,7 +167,7 @@ if (!isset($_SESSION['user'])) {
                             <label for="phoneNo">Phone No</label>
                         </div>
                         <div class="form-floating">
-                            <textarea class="form-control" placeholder="Address"  id="Address" style="height: 100px"> <?php echo $row1['address'] ?></textarea>
+                            <textarea class="form-control" placeholder="Address" id="Address" style="height: 100px"> <?php echo $row1['address'] ?></textarea>
                             <label for="Address">Address</label>
                         </div>
                     </div>
@@ -167,6 +188,7 @@ if (!isset($_SESSION['user'])) {
 
         var shippingRate = 0;
         var fadeTime = 300;
+        var discount = 0;
 
         var total = 0;
 
@@ -195,12 +217,12 @@ if (!isset($_SESSION['user'])) {
             /* Calculate totals */
 
             var shipping = (subtotal > 0 ? shippingRate : 0);
-             total = subtotal + shipping;
+            total = subtotal + shipping - discount;
 
             /* Update totals display */
             $('.totals-value').fadeOut(fadeTime, function() {
                 $('#cart-subtotal').html(subtotal.toFixed(0));
-                // $('#cart-tax').html(tax.toFixed(0));
+                $('#cart-tax').html(discount.toFixed(0));
                 $('#cart-shipping').html(shipping.toFixed(0));
                 $('#cart-total').html(total.toFixed(0));
                 if (total == 0) {
@@ -265,7 +287,9 @@ if (!isset($_SESSION['user'])) {
         function placeOrder() {
             const phoneNo = document.getElementById('phoneNo').value;
             const address = document.getElementById('Address').value;
-        
+            const coupon = document.getElementById('couponInput').value;
+            
+
             if (phoneNo < 5999999999 || phoneNo > 9999999999) {
                 console.log('invalid', phoneNo);
                 alert("Enter Vaild Phone No");
@@ -299,9 +323,11 @@ if (!isset($_SESSION['user'])) {
                 total,
                 phoneNo,
                 address,
-                quantityarray
+                quantityarray,
+                discount,
+                coupon
             }
-  
+
 
             fetch('./backend/placeOrder.php', {
                     method: 'POST',
@@ -315,8 +341,6 @@ if (!isset($_SESSION['user'])) {
                     console.log(data);
                     if (data == "success") {
                         window.location.href = "./cart.php?order=success";
-
-
                     }
                 })
                 .catch(error => {
@@ -324,6 +348,54 @@ if (!isset($_SESSION['user'])) {
                 });
 
         }
+
+        function applycoupon(coupon) {
+            const couponinput = document.getElementById('couponInput');
+        
+            const data = {
+                coupon
+            };
+            console.log(data)
+            fetch('./backend/applycoupon.php', {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                }).then(res => res.json())
+                .then(data => {
+                    if (data.status === "Success") {
+                        couponinput.classList.remove('is-invalid');
+                        couponinput.classList.add('is-valid');
+                        discount = parseInt(data.discount);
+                        recalculateCart();
+                    } else if (data.status === "Invalid") {
+                        couponinput.classList.remove('is-valid');
+                        couponinput.classList.add('is-invalid');
+                        console.log("invalid")
+                        discount = 0;
+                        recalculateCart();
+                    }
+                    console.log(data)
+                })
+        }
+        
+        function debounce(func, delay) {
+            let timeoutId;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(function() {
+                    func.apply(context, args);
+                }, delay);
+            };
+            
+        }
+        function handleInput() {
+            const inputValue = document.getElementById('couponInput').value;
+            applycoupon(inputValue)
+            // Perform the desired action with the debounced value
+        }
+        const debouncedInputHandler = debounce(handleInput, 800); 
+        document.getElementById('couponInput').addEventListener("input", debouncedInputHandler)
     </script>
 </body>
 

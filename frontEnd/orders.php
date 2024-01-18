@@ -83,9 +83,9 @@ if (!isset($_SESSION['user'])) {
                                 if($row0['orderConfirmation'] == '0'){
                                     echo "<span class='text-danger'> Order Not Confirm Yet!</span>";
                                 }else if($row0['orderConfirmation'] == '1' && $row0['trakingNo'] === NULL){
-                                    echo "<span class='text-success'> Order Confirmed</span>";
+                                    echo "<span class='text-light'> Order Confirmed</span>";
                                 }else if($row0['trakingNo'] !== NULL && $row0['FinalStatus'] == 'delivered'){
-                                    echo "<span class='text-success'> Order Delivered</span>";
+                                    echo "<span class='text-success'> Order Delivered </span>";
                                 }else if($row0['trakingNo'] !== NULL && $row0['FinalStatus'] == 'cancel'){
                                     echo "<span class='text-danger'> Order Cancel</span>";
                                 }else if($row0['trakingNo'] !== NULL && $row0['FinalStatus'] === null){
