@@ -287,6 +287,8 @@ if (!isset($_SESSION['user'])) {
         function placeOrder() {
             const phoneNo = document.getElementById('phoneNo').value;
             const address = document.getElementById('Address').value;
+            const coupon = document.getElementById('couponInput').value;
+            
 
             if (phoneNo < 5999999999 || phoneNo > 9999999999) {
                 console.log('invalid', phoneNo);
@@ -321,7 +323,9 @@ if (!isset($_SESSION['user'])) {
                 total,
                 phoneNo,
                 address,
-                quantityarray
+                quantityarray,
+                discount,
+                coupon
             }
 
 
