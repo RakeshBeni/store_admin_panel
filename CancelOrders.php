@@ -58,9 +58,9 @@ include "./connection.php";
     <div class="container mt-4">
         <center>
             <div class="btn-group"><button type="button" class="btn btn-secondary btn-lg shadow" disabled><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-check2-circle" viewBox="0 0 16 16">
-  <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0"/>
-  <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
-</svg> &nbsp Successfull Order</button>
+                        <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
+                        <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" />
+                    </svg> &nbsp Successfull Order</button>
 
 
             </div>
@@ -157,8 +157,8 @@ include "./connection.php";
                                             <div class="modal-footer">
                                                 <?php if ($row['payment'] === '1') {
                                                     echo ' <button type="button" class="btn  btn-success"  data-bs-toggle="modal" data-bs-target="#paymentImage" data-bs-image="' . $row['paymentImage'] . '">Payment Image</button>';
-                                                }else{
-                                                    echo ' <button type="button" class="btn  btn-primary"  data-bs-toggle="modal" data-bs-target="#paymentRecived" data-bs-sr="'.$row['sr'].'">Payment Received</button>';
+                                                } else {
+                                                    echo ' <button type="button" class="btn  btn-primary"  data-bs-toggle="modal" data-bs-target="#paymentRecived" data-bs-sr="' . $row['sr'] . '">Payment Received</button>';
                                                 } ?>
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
@@ -169,18 +169,18 @@ include "./connection.php";
                             </td>
                             <td>
 
-                            <?php   $result3 = mysqli_query($conn, "SELECT * FROM `deliveredorder` WHERE `OrderId` = '$row[sr]'"); 
+                                <?php $result3 = mysqli_query($conn, "SELECT * FROM `cancelorders` WHERE `OrderId` = '$row[sr]'");
                                 $row3 = mysqli_fetch_assoc($result3);
-                                
-                                if($row3['feedBack'] == null){
 
-                                    echo "<button class='btn btn-outline-primary btn-sm ' data-bs-toggle='modal' data-bs-target='#processing' data-bs-sr=' ".$row['sr'] ."'> FeedBack</button>";
-                                }else{
-                                    
-                                    echo "<button class='btn btn-primary btn-sm ' data-bs-toggle='modal' data-bs-target='#feedback' data-bs-feedback=' ".$row3['feedBack'] ."'> FeedBack</button>";
+                                if ($row3['Remarks'] == null) {
+
+                                    echo "<button class='btn btn-outline-primary btn-sm ' data-bs-toggle='modal' data-bs-target='#processing'  data-bs-feedback=' " . $row['finalDescription'] . "' data-bs-sr=' " . $row['sr'] . "'> Add Remarks</button>";
+                                } else {
+
+                                    echo "<button class='btn btn-primary btn-sm ' data-bs-toggle='modal' data-bs-target='#feedback' data-bs-feedback1=' " . $row['finalDescription'] . "' data-bs-feedback=' " . $row3['Remarks'] . "'>View Remarks </button>";
                                 }
-                                
-                                
+
+
                                 ?>
                             </td>
                         </tr>
@@ -235,7 +235,7 @@ include "./connection.php";
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <!-- <button type="Submit" class="btn btn-primary">Submit</button> -->
+              
 
                 </div>
             </div>
@@ -252,13 +252,18 @@ include "./connection.php";
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="./Backend/cancelOrderProcess.php" method="post" >
+
+
+                    <h5>Remarks On cancellation</h5>
+                    <p id="feedbackText1"></p>
+                    <hr>
+                    <form action="./Backend/cancelOrderProcess.php" method="post">
                         <input type="text" id="srValue11" name="OrderNo" value="" hidden>
 
                         <div class="form-floating">
-                            
+
                             <textarea class="form-control" name="description" placeholder="Leave a comment here" id="floatingText" style="height: 100px"></textarea>
-                            <label for="floatingText">Description</label>
+                            <label for="floatingText">Add Remarks</label>
                         </div>
 
                 </div>
@@ -275,15 +280,20 @@ include "./connection.php";
         <div class="modal-dialog" style="color:black">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">FeedBack</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Remarks</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                   <h5 id="feedbackText"></h5>
+                    <h5>Final Remarks</h5>
+                    <p id="feedbackText"></p>
+                    <hr>
+                    <h5>Remarks On cancellation</h5>
+                    <p id="feedbackText2"></p>
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="Submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
             </div>
@@ -298,16 +308,19 @@ include "./connection.php";
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-
-var exampleModal = document.getElementById('feedback')
+        var exampleModal = document.getElementById('feedback')
         exampleModal.addEventListener('show.bs.modal', function(event) {
-            
+
             var button = event.relatedTarget
-           
+
             var recipient = button.getAttribute('data-bs-feedback')
 
-             document.getElementById('feedbackText').innerText = recipient;
-           
+            document.getElementById('feedbackText').innerText = recipient;
+
+            var recipient = button.getAttribute('data-bs-feedback1')
+
+            document.getElementById('feedbackText2').innerText = recipient
+
 
         })
 
@@ -329,11 +342,16 @@ var exampleModal = document.getElementById('feedback')
             var button = event.relatedTarget
             // Extract info from data-bs-* attributes
             var recipient = button.getAttribute('data-bs-sr')
+            var remarks = button.getAttribute('data-bs-feedback')
             console.log(recipient)
+
+            document.getElementById('feedbackText1').innerText = remarks;
 
             const srvalue = document.getElementById('srValue11');
             console.log(srvalue)
             srvalue.setAttribute("value", recipient);
+
+
 
         })
     </script>
