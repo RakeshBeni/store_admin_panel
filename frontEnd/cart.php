@@ -110,8 +110,8 @@ if (!isset($_SESSION['user'])) {
             <div class="d-flex">
 
 
-                <div class="col-md-6 col-12 ">
-                    <div class="form-floating mb-3 text-dark">
+                <div class="col-md-6 col-12 " >
+                    <div class="form-floating mb-3 text-dark" id="couponfild">
                         <input type="email" class="form-control " id="couponInput" placeholder="name@example.com">
                         <label for="floatingInput ">Enter Coupon</label>
 
@@ -227,6 +227,7 @@ if (!isset($_SESSION['user'])) {
                 $('#cart-total').html(total.toFixed(0));
                 if (total == 0) {
                     $('.checkout').fadeOut(fadeTime);
+                    $('#couponfild').fadeOut(fadeTime);
                 } else {
                     $('.checkout').fadeIn(fadeTime);
                 }
