@@ -20,7 +20,7 @@ $(function () {
       "<div class='multiple-select-container " +
       selectClasses +
       "'>" +
-      "<ul class='multiple-select-choices'><li class='input'><input type='text' placeholder='Please select'></li></ul>" +
+      "<ul class='multiple-select-choices'><li class='input bg-dark'><input class='bg-dark' type='text' placeholder='Please select'></li></ul>" +
       "<div class='multiple-select-dropdown'><ul>";
 
     for (var i = 0; i < optionsArray.length; i++) {
@@ -195,4 +195,42 @@ function submitForm() {
 
     )
     .catch((error) => console.error("Error:", error));
+}
+
+function changeStock(a) {
+  const productSr = a.getAttribute('data-sr');
+  const productStatus = a.getAttribute('data-status');
+  const type = a.getAttribute('data-type');
+
+  const dataToSend = {
+    type,
+    productSr,
+    productStatus
+  }
+
+  fetch('./Backend/editProductStatus.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSend),
+    }).then(response => response.text())
+    .then(data => {
+      // Handle the response from the server, if needed
+      console.log(data);
+      if (data == "success") {
+        location.reload();
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+
+
+}
+
+
+
+function addProduct() {
+  $('#addProductModal').modal('show')
 }
