@@ -90,7 +90,7 @@ if (!isset($_SESSION['user'])) {
                         <img src="../<?php echo $row['imgUrl'] ?>">
                     </div>
                     <div class="product-details">
-                        <div class="product-title"><?php echo $row['product'] ?></div>
+                        <div class="product-title  h5"><?php echo $row['product'] ?></div>
                         <p class="product-description"><?php echo $row['description'] ?></p>
                     </div>
                     <div class="product-price1"><?php echo $product['flavour'] ?></div>
