@@ -155,7 +155,10 @@ include "./connection.php";
                                             </div>
                                             <div class="modal-footer">
                                                 <?php if ($row['payment'] === '1') {
-                                                    echo ' <button type="button" class="btn  btn-primary"  data-bs-toggle="modal" data-bs-target="#paymentImage" data-bs-image="' . $row['paymentImage'] . '">Payment Received</button>';
+                                                    echo ' <button type="button" class="btn  btn-success"  data-bs-toggle="modal" data-bs-target="#paymentImage" data-bs-image="' . $row['paymentImage'] . '">View Payment</button>';
+                                                }else{
+                                                    echo ' <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#paymentRecived" data-bs-whatever="' . $row['sr'] . '">Payment Received</button>';
+
                                                 } ?>
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
@@ -193,9 +196,7 @@ include "./connection.php";
 
                                             </div>
                                             <div class="modal-footer">
-                                                <?php if ($row['payment'] === '0') {
-                                                    echo ' <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#paymentRecived" data-bs-whatever="' . $row['sr'] . '">Payment Received</button>';
-                                                } ?>
+                                              
 
 
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
