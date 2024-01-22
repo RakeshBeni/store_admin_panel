@@ -117,6 +117,7 @@ include "./connection.php";
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                            <?php if($row['coupon'] != null){echo "<h4 class='text-success'> Coupon Applied : $row[coupon]   of <span class='text-warning'>  $row[discount] Rupess</span> </h4> ";}?>
                                                 <h3 class="text-success">Track Id : <?php echo $row['trakingNo'] ?></h3>
                                                 <p>Description: <?php echo $row['dispatchDescription'] ?></p>
                                                 <div class="m-5">
