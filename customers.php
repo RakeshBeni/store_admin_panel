@@ -132,7 +132,7 @@ if (!isset($_GET['customer'])) {
                                                     </thead>
                                                     <tbody>
                                                         <?php
-                                                        $result1 = mysqli_query($conn, "SELECT * FROM orders WHERE `FinalStatus` != 'cancel' OR `FinalStatus` IS NULL AND `customersId` = '1'");
+                                                        $result1 = mysqli_query($conn, "SELECT * FROM orders WHERE `FinalStatus` != 'cancel' OR `FinalStatus` IS NULL AND `customersId` = '$row[userId]'");
                                                         while ($row1 = mysqli_fetch_assoc($result1)) {
 
                                                         ?>
@@ -210,7 +210,7 @@ if (!isset($_GET['customer'])) {
                                                         </thead>
                                                         <tbody>
                                                             <?php
-                                                            $result11 = mysqli_query($conn, "SELECT * FROM orders WHERE `FinalStatus` = 'cancel' AND `customersId` = '1'");
+                                                            $result11 = mysqli_query($conn, "SELECT * FROM orders WHERE `FinalStatus` = 'cancel' AND `customersId` = '$row[userId]'");
 
                                                             while ($row11 = mysqli_fetch_assoc($result11)) {
                                                             ?>

@@ -128,11 +128,13 @@ if(!isset($_GET['OrderId'])){
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                                <?php if($row['coupon'] != null){echo "<h4 class='text-success'> Coupon Applied : $row[coupon]   of <span class='text-warning'>  $row[discount] Rupess</span> </h4><hr> ";}?>
                                                 <h3 class="text-success"><?php if($row['trakingNo'] !== null){echo 'Track Id : '.$row['trakingNo'];}?>  </h3>
 
                                                 <p> <?php if($row['dispatchDescription'] !== ''){echo 'Description : '.$row['dispatchDescription'];}?>  </p>
                                                 
                                                 <div class="m-5">
+
                                                     <table class="table table-striped border border-secondary text-center">
                                                         <thead>
                                                             <tr>

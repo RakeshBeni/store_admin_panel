@@ -110,7 +110,7 @@ if (!isset($_SESSION['user'])) {
             <div class="d-flex">
 
 
-                <div class="col-md-6 col-12 " >
+                <div class="col-md-6 col-12 ">
                     <div class="form-floating mb-3 text-dark" id="couponfild">
                         <input type="email" class="form-control " id="couponInput" placeholder="name@example.com">
                         <label for="floatingInput ">Enter Coupon</label>
@@ -153,7 +153,7 @@ if (!isset($_SESSION['user'])) {
 
 
         <!-- Modal -->
-        <div class="modal fade " style="backdrop-filter: blur(8px); color:black;" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade " style="backdrop-filter: blur(8px); color:black;" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -173,7 +173,33 @@ if (!isset($_SESSION['user'])) {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="placeOrder()">Confire Order</button>
+                        <button type="button" id="confirmNO" class="btn btn-primary <?php if ($row1['verifiedPhoneNo'] === '1') { echo "d-none"; } ?>" onclick="confirmPhoneNo()">Confire Phone No</button>
+                        <button type="button" class="btn btn-primary <?php if ($row1['verifiedPhoneNo'] === '0') {  echo "d-none";  } ?>" onclick="placeOrder()">Confire Order</button>
+                        <button type="button" id="otpWait" class="btn btn-primary disabled d-none">Wait for OTP</button>
+                        <button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" id="showOtpModal" data-bs-target="#OTPmodal">Enter OTP</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade " data-bs-backdrop="static" style="backdrop-filter: blur(8px); color:black;" id="OTPmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Enter Details</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="OTP" placeholder="Phone NO">
+                            <label for="phoneNo">Enter OTP</label>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="confirmOTP()">Confire Phone No</button>
                     </div>
                 </div>
             </div>
@@ -285,11 +311,54 @@ if (!isset($_SESSION['user'])) {
 
         }
 
-        function placeOrder() {
+        function confirmPhoneNo() {
+            document.getElementById('confirmNO').classList.add('d-none');
+            document.getElementById('otpWait').classList.remove('d-none');
+            const phoneNo = document.getElementById('phoneNo').value;
+
+            if (phoneNo < 5999999999 || phoneNo > 9999999999) {
+                console.log('invalid', phoneNo);
+                alert("Enter Vaild Phone No");
+                return;
+            }
+
+            const apiUrl = './backend/veryfyPhoneNo.php?phoneNO=' + phoneNo;
+            console.log(apiUrl);
+
+            fetch(apiUrl)
+                .then(response => {
+                    // Check if the request was successful (status code 200-299)
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log(data);
+                    if (data === "successfull") {
+                        $('#OTPmodal').modal("show")
+                        document.getElementById("showOtpModal").classList.remove("d-none");
+                        document.getElementById("otpWait").classList.add("d-none");
+                        
+                    }else{
+                        document.getElementById("confirmNO").classList.remove("d-none");
+                        document.getElementById("otpWait").classList.add("d-none");
+                        alert('There is some issue. Please Try After some time');
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.error('Fetch error:', error);
+                });
+
+
+        }
+
+        async function placeOrder() {
             const phoneNo = document.getElementById('phoneNo').value;
             const address = document.getElementById('Address').value;
             const coupon = document.getElementById('couponInput').value;
-            
+
 
             if (phoneNo < 5999999999 || phoneNo > 9999999999) {
                 console.log('invalid', phoneNo);
@@ -302,6 +371,8 @@ if (!isset($_SESSION['user'])) {
                 alert("Enter Address");
                 return;
             }
+
+
 
 
             const input1 = document.querySelectorAll(".item-quantity");
@@ -352,7 +423,7 @@ if (!isset($_SESSION['user'])) {
 
         function applycoupon(coupon) {
             const couponinput = document.getElementById('couponInput');
-        
+
             const data = {
                 coupon
             };
@@ -377,7 +448,7 @@ if (!isset($_SESSION['user'])) {
                     console.log(data)
                 })
         }
-        
+
         function debounce(func, delay) {
             let timeoutId;
             return function() {
@@ -388,15 +459,35 @@ if (!isset($_SESSION['user'])) {
                     func.apply(context, args);
                 }, delay);
             };
-            
+
         }
+
         function handleInput() {
             const inputValue = document.getElementById('couponInput').value;
             applycoupon(inputValue)
             // Perform the desired action with the debounced value
         }
-        const debouncedInputHandler = debounce(handleInput, 800); 
+        const debouncedInputHandler = debounce(handleInput, 800);
         document.getElementById('couponInput').addEventListener("input", debouncedInputHandler)
+
+
+        function confirmOTP() {
+            const otp = document.getElementById('OTP').value;
+            fetch(`./backend/confirmOtp.php?otp=${otp}`, {
+                    method: 'GET'
+                }).then(res => res.text())
+                .then(data => {
+
+                    console.log(data)
+                    if(data === "verified"){
+                        placeOrder();
+                    }else if(data === "otp expire"){
+                        alert("otp expired Please try again")
+                    }else if(data === "otp invalid"){
+                        alert('invalid Opt')
+                    }
+                })
+        }
     </script>
 </body>
 
