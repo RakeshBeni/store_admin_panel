@@ -1,6 +1,6 @@
 <?php
 include "./connection.php";
-if(!isset($_GET['customer'])){
+if (!isset($_GET['customer'])) {
     header("location:./index.php");
 }
 
@@ -16,6 +16,15 @@ if(!isset($_GET['customer'])){
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/css/style.css">
     <style>
+        a {
+            color: #69aaff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #83ac55;
+        }
+
         ::-webkit-scrollbar {
             width: 5px;
         }
@@ -129,7 +138,7 @@ if(!isset($_GET['customer'])){
                                                         ?>
 
                                                             <tr>
-                                                                <th scope="row"><?php echo $row1['sr']; ?></th>
+                                                                <th scope="row"><a href="orderDetails.php?OrderId=<?php echo $row1['sr']; ?>"><?php echo $row1['sr']; ?></a> </th>
 
 
                                                                 <td><?php if ($row1['FinalStatus']) {
@@ -207,18 +216,19 @@ if(!isset($_GET['customer'])){
                                                             ?>
 
                                                                 <tr>
-                                                                    <th scope="row"><?php echo $row11['sr']; ?></th>
+                                                                   
+                                                                    <th scope="row"><a href="orderDetails.php?OrderId=<?php echo $row11['sr']; ?>"><?php echo $row11['sr']; ?></a></th>
                                                                     <td><?php if ($row11['payment'] == 1) {
-                                                                            echo "Received";
+                                                                            echo " <span class='text-success'>Received</span>";
                                                                         } else {
-                                                                            echo "Unpaid";
+                                                                            echo "<span class='text-danger'>Unpaid</span>";
                                                                         } ?></td>
                                                                     <td><?php echo $row11['orderValue'] ?></td>
 
                                                                     <td><?php $ordersArray = json_decode($row11['orders'], true);
                                                                         $objectCount = count($ordersArray);
                                                                         echo $objectCount; ?></td>
-                                                                    <td><?php if ($row11['FinalStatus'] == null) {
+                                                                    <td><?php if ($row11['FinalStatus'] !== null) {
                                                                             $query2 = mysqli_query($conn, "SELECT * FROM cancelorders WHERE `OrderId` = '$row11[sr]'");
                                                                             $row2 = mysqli_fetch_assoc($query2);
                                                                             if ($row2['Remarks'] !== null) {
@@ -267,43 +277,7 @@ if(!isset($_GET['customer'])){
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-        var exampleModal = document.getElementById('paymentRecived')
-        exampleModal.addEventListener('show.bs.modal', function(event) {
-            // Button that triggered the modal
-            var button = event.relatedTarget
-            // Extract info from data-bs-* attributes
-            var recipient = button.getAttribute('data-bs-sr')
 
-            const srvalue = document.getElementById('srValue');
-            srvalue.setAttribute("value", recipient);
-
-        })
-
-
-        var exampleModal = document.getElementById('paymentImage')
-        exampleModal.addEventListener('show.bs.modal', function(event) {
-            // Button that triggered the modal
-            var button = event.relatedTarget
-            // Extract info from data-bs-* attributes
-            var recipient = button.getAttribute('data-bs-image')
-
-            const srvalue = document.getElementById('paymentImage1');
-            srvalue.setAttribute("src", recipient);
-
-        })
-        var exampleModal = document.getElementById('processing')
-        exampleModal.addEventListener('show.bs.modal', function(event) {
-            // Button that triggered the modal
-            var button = event.relatedTarget
-            // Extract info from data-bs-* attributes
-            var recipient = button.getAttribute('data-bs-sr')
-            console.log(recipient)
-
-            const srvalue = document.getElementById('srValue11');
-            console.log(srvalue)
-            srvalue.setAttribute("value", recipient);
-
-        })
     </script>
 
 </body>

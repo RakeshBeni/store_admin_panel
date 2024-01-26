@@ -1,8 +1,8 @@
 <?php
 include "./connection.php";
-// if(!isset($_GET['OrderId'])){
-//     header("location:./index.php");
-// }
+if(!isset($_GET['OrderId'])){
+    header("location:./index.php");
+}
 
 ?>
 
