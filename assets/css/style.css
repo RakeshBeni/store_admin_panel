@@ -1,0 +1,81 @@
+.cardcss {
+  width: 24rem;
+  height: 38rem;
+}
+
+.imagecss {
+  object-fit: contain;
+  height: 50%;
+}
+
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.multiple-select  a:link {
+  text-decoration: none;
+}
+
+.multiple-select {
+	min-height: 40px;
+	overflow: auto;
+}
+.multiple-select-choices, .multiple-select-choices li, .multiple-select-choices input {
+	height: 100%;
+	width: 100%;
+	border: none;
+	outline: 0 none;
+}
+.multiple-select-choices li.choice-active,
+.multiple-select-choices li.choice-active input {
+	float: left;
+	height: auto;
+	width: auto;
+}
+.multiple-select-choices li.choice-active input {
+	width: 2px;
+}
+.multiple-select-dropdown {
+	display: none;
+  z-index: 10;
+	background: #eee;
+	max-height: 250px;
+	overflow: auto;
+	position: absolute;
+	top: 54%;
+}
+.multiple-select-dropdown li {
+	display: block;
+	text-decoration: none;
+	color: #000;
+	padding: 5px 15px;
+	cursor: pointer;
+}
+.multiple-select-dropdown li:hover {
+	background: #5175c8;
+	color: #fff;
+}
+.multiple-select-choices li:not(.input) {
+	float: left;
+	margin-right: 5px;
+	padding: 0 5px;
+	margin-bottom: 5px;
+	font-size: 14px;
+	background: #ddd;
+	border-radius: 3px;
+}
+.multiple-select-choices li a {
+	font-size: 18px;
+	color: #000;
+}
+.option-disabled {
+	opacity: .5;
+}
+.option-disabled:hover {
+	opacity: .5;
+	background: none;
+	color: #000;
+	cursor: default;
+}
