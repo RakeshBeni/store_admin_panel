@@ -70,7 +70,9 @@ if (!isset($_SESSION['user'])) {
 
             <div class="accordion" id="accordionExample">
                 <?php
+                
                 $query2 = mysqli_query($conn, "SELECT * FROM `orders` WHERE `customersId` = '$_SESSION[userId]' ORDER BY `sr` DESC");
+                $rowNum = mysqli_num_rows($query2);
                 while ($row0 = mysqli_fetch_assoc($query2)) {
 
                 ?>
@@ -78,7 +80,7 @@ if (!isset($_SESSION['user'])) {
                     <div class="accordion-item bg-dark text-light">
                         <h2 class="accordion-header">
                             <button class="accordion-button bg-dark text-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $row0['sr'] ?>" aria-expanded="false" aria-controls="collapse<?php echo $row0['sr'] ?>">
-                                Order No <?php echo $row0['sr'] ?>  &nbsp &nbsp &nbsp &nbsp &nbsp <span class="text-warning"> Status:</span>   &nbsp<?php 
+                                Order No <?php echo $rowNum--; ?>  &nbsp &nbsp &nbsp &nbsp &nbsp <span class="text-warning"> Status:</span>   &nbsp<?php 
 
                                 if($row0['orderConfirmation'] == '0'){
                                     echo "<span class='text-danger'> Order Not Confirm Yet!</span>";

@@ -1,5 +1,8 @@
 <?php
 include "./connection.php";
+if(!isset($_GET['OrderId'])){
+    header("location:./index.php");
+}
 
 ?>
 
@@ -13,14 +16,6 @@ include "./connection.php";
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/css/style.css">
     <style>
-
-a {
-  color: #69aaff;
-  text-decoration: none;
-}
-a:hover{
-    color: #83ac55;
-}
         ::-webkit-scrollbar {
             width: 5px;
         }
@@ -60,51 +55,67 @@ a:hover{
     </style>
 </head>
 
-<body class="bg-dark text-light">
-    <?php include './navbar.php';?>
+<body class="bg-dark">
+    <?php include './navbar.php'; ?>
 
     <div class="container mt-4">
         <center>
-            <div class="btn-group"><button type="button" class="btn btn-secondary btn-lg shadow" disabled><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16">
-                        <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z" />
-                    </svg> &nbsp View Order</button>
+            <div class="btn-group"><button type="button" class="btn btn-secondary btn-lg shadow" disabled><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-video" viewBox="0 0 16 16">
+                        <path d="M8 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
+                        <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm10.798 11c-.453-1.27-1.76-3-4.798-3-3.037 0-4.345 1.73-4.798 3H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1z" />
+                    </svg> &nbsp Customers </button>
 
 
             </div>
         </center>
         <div class="mt-5">
-
-            <table class="table table-dark table-striped">
+        <table class="table table-dark table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">Sr</th>
+                        <th scope="col">Order Id</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Time</th>
                         <th scope="col">Name</th>
                         <th scope="col">Phone No</th>
                         <th scope="col">Address</th>
                         <th scope="col">Order Value</th>
                         <th scope="col">Products</th>
-                        <th scope="col">Processing</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     $index = 0;
-                    $result = mysqli_query($conn, "SELECT * FROM orders  WHERE `orderConfirmation` = '0' ORDER BY sr DESC;");
+                    $result = mysqli_query($conn, "SELECT * FROM orders  WHERE `sr` = '$_GET[OrderId]';");
                     while ($row = mysqli_fetch_assoc($result)) {
-                        $index++;
+                       
                     ?>
                         <tr>
-                            <th scope="row"><?php echo $index; ?></th>
+                            
+                            <th scope="row"><?php echo $row['sr']; ?></th>
+                            
+                            <td><?php if ($row['FinalStatus']) {
+                                                                        echo "<span class='text-success'>Successfull</span>";
+                                                                    } elseif ($row['trakingNo'] !== null) {
+                                                                        echo "   <span class='text-success'>Order Dispatched</span>";
+                                                                    } elseif ($row['orderConfirmation'] == '1') {
+                                                                        echo "   <span class='text-info'>Order Confirmed</span>";
+                                                                    } else {
+                                                                        echo "<span class='text-warning'>order Placed</span>";
+                                                                    } ?></td>
                             <td><?php echo $row['timestamp']; ?></td>
                             <td><?php $result1 = mysqli_query($conn, "SELECT `Name` FROM `customers` WHERE `userId` = '$row[customersId]'");
                                 $row1 = mysqli_fetch_assoc($result1);
-                              echo   "<a href='./customers.php?customer=".$row['customersId']."' >".$row1['Name']."</a>" ; ?></td>
+                                echo $row1['Name']; ?></td>
                             <td><?php echo $row['phoneNo']; ?></td>
                             <td><?php echo $row['address']; ?></td>
                             <td><?php echo $row['orderValue']; ?></td>
+
                             <td><!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $row['sr'] ?>">
+                                <button type="button" class="btn <?php if ($row['payment'] === '0') {
+                                                                        echo 'btn-outline-success';
+                                                                    } else {
+                                                                        echo 'btn-success';
+                                                                    } ?> btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $row['sr'] ?>">
                                     Products
                                 </button>
 
@@ -117,14 +128,16 @@ a:hover{
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                            <?php if($row['coupon'] != null){echo "<h4 class='text-success'> Coupon Applied : $row[coupon]   of <span class='text-warning'>  $row[discount] Rupess</span> </h4> ";}?>
+                                                <h3 class="text-success"><?php if($row['trakingNo'] !== null){echo 'Track Id : '.$row['trakingNo'];}?>  </h3>
+
+                                                <p> <?php if($row['dispatchDescription'] !== ''){echo 'Description : '.$row['dispatchDescription'];}?>  </p>
+                                                
                                                 <div class="m-5">
-                                                    <table class="table table-striped border border-secondary">
+                                                    <table class="table table-striped border border-secondary text-center">
                                                         <thead>
                                                             <tr>
-                                                                <th scope="col">#</th>
+                                                                <th scope="col">Index</th>
                                                                 <th scope="col">Product</th>
-
                                                                 <th scope="col">Flavour</th>
                                                                 <th scope="col">Quantity</th>
                                                                 <th scope="col">Price</th>
@@ -145,6 +158,7 @@ a:hover{
                                                                         echo $productWeight ?></td>
                                                                     <td><?php echo $product['flavour'] ?></td>
                                                                     <td><?php echo $product['quantity'] ?></td>
+
                                                                     <td><?php echo $product['price'] ?></td>
                                                                 </tr>
 
@@ -156,6 +170,9 @@ a:hover{
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
+                                                <?php if ($row['payment'] === '1') {
+                                                    echo ' <button type="button" class="btn  btn-success"  data-bs-toggle="modal" data-bs-target="#paymentImage" data-bs-image="' . $row['paymentImage'] . '">Payment Image</button>';
+                                                } ?>
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
                                             </div>
@@ -163,53 +180,17 @@ a:hover{
                                     </div>
                                 </div>
                             </td>
-                            <td><!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#examplel<?php echo $row['sr'] ?>">
-                                    Process
-                                </button>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="examplel<?php echo $row['sr'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog " style="color:black">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Order</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="./Backend/confirmOrder.php" method="post">
-
-                                                    <input type="text" value="<?php echo $row['sr']; ?>" name="orderSr" hidden>
-
-
-                                                    <div class="form-floating mb-3">
-                                                        <input class="form-control" id="floatingTextarea2" name="address" value="<?php echo  $row['address']; ?>" placeholder="Leave a comment here" style="height: 100px"></input>
-                                                        <label for="floatingTextarea2">Edit Address</label>
-                                                    </div>
-                                                    <div class="form-floating">
-                                                        <textarea class="form-control" name="description" placeholder="Leave a comment here" id="floatingText" style="height: 100px"></textarea>
-                                                        <label for="floatingText">Description</label>
-                                                    </div>
-
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-success">Confirm Order</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
+                 
                         </tr>
 
                     <?php } ?>
 
                 </tbody>
             </table>
-
+         
         </div>
+
+
 
 
     </div>
@@ -218,13 +199,10 @@ a:hover{
 
 
 
-
-
-
-
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 
 </body>
 

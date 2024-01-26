@@ -117,6 +117,7 @@ include "./connection.php";
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                            <?php if($row['coupon'] != null){echo "<h4 class='text-success'> Coupon Applied : $row[coupon]   of <span class='text-warning'>  $row[discount] Rupess</span> </h4> ";}?>
                                                 <h3 class="text-success">Track Id : <?php echo $row['trakingNo'] ?></h3>
                                                 <p>Description: <?php echo $row['dispatchDescription'] ?></p>
                                                 <div class="m-5">
@@ -158,7 +159,7 @@ include "./connection.php";
                                             </div>
                                             <div class="modal-footer">
                                                 <?php if ($row['payment'] === '1') {
-                                                    echo ' <button type="button" class="btn  btn-success"  data-bs-toggle="modal" data-bs-target="#paymentImage" data-bs-image="' . $row['paymentImage'] . '">Payment Image</button>';
+                                                    echo ' <button type="button" class="btn  btn-success"  data-bs-toggle="modal" data-bs-target="#paymentImage" data-bs-image="' . $row['paymentImage'] . '">View Payment</button>';
                                                 }else{
                                                     echo ' <button type="button" class="btn  btn-primary"  data-bs-toggle="modal" data-bs-target="#paymentRecived" data-bs-sr="'.$row['sr'].'">Payment Received</button>';
                                                 } ?>

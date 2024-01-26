@@ -90,7 +90,7 @@ if (!isset($_SESSION['user'])) {
                         <img src="../<?php echo $row['imgUrl'] ?>">
                     </div>
                     <div class="product-details">
-                        <div class="product-title"><?php echo $row['product'] ?></div>
+                        <div class="product-title  h5"><?php echo $row['product'] ?></div>
                         <p class="product-description"><?php echo $row['description'] ?></p>
                     </div>
                     <div class="product-price1"><?php echo $product['flavour'] ?></div>
@@ -110,8 +110,8 @@ if (!isset($_SESSION['user'])) {
             <div class="d-flex">
 
 
-                <div class="col-md-6 col-12 ">
-                    <div class="form-floating mb-3 text-dark">
+                <div class="col-md-6 col-12 " >
+                    <div class="form-floating mb-3 text-dark" id="couponfild">
                         <input type="email" class="form-control " id="couponInput" placeholder="name@example.com">
                         <label for="floatingInput ">Enter Coupon</label>
 
@@ -227,6 +227,7 @@ if (!isset($_SESSION['user'])) {
                 $('#cart-total').html(total.toFixed(0));
                 if (total == 0) {
                     $('.checkout').fadeOut(fadeTime);
+                    $('#couponfild').fadeOut(fadeTime);
                 } else {
                     $('.checkout').fadeIn(fadeTime);
                 }

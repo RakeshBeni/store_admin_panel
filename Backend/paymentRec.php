@@ -25,11 +25,10 @@ if (isset($_POST)) {
         }
     }
     if(isset($_POST['Dispatch'])){
-
         header('location:../dispatchedOrders.php');
-    }else{
-
-        
+    }elseif(isset($_POST['successfull'])){
+        header('location:../successfullorders.php');
+    }else{   
         header('location:../confirmOrders.php');
     }
 

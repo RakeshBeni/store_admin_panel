@@ -38,6 +38,7 @@ if (!isset($_SESSION['user'])) {
         .cardcss {
             width: 24rem;
             height: 38rem;
+            box-shadow: 0px 0px 18px 0px rgb(90,90,90)
         }
 
         .imagecss {
@@ -74,7 +75,7 @@ if (!isset($_SESSION['user'])) {
             }
             while ($row = mysqli_fetch_assoc($result)) {
             ?>
-                <div class="card bg-dark text-light border-light mb-3 cardcss">
+                <div class="card bg-dark text-light border-light mb-5 cardcss">
                     <img src="../<?php echo $row['imgUrl'] ?>" class="card-img-top imagecss" alt="...">
                     <div class="card-body" style=" overflow: overlay;">
                         <h5 class="card-title"><?php echo $row['product'] ?> <span><?php echo $row['weight']; ?></span></h5>
@@ -140,8 +141,8 @@ if (!isset($_SESSION['user'])) {
             }
 
             if(flavours.length<1){
-                alert('Select Flavour');
-                return;
+          
+                flavours.push("UNFLAVOURED")
             }
             
             const dataToSend = {
