@@ -477,9 +477,9 @@ if (!isset($_SESSION['user'])) {
                     method: 'GET'
                 }).then(res => res.text())
                 .then(data => {
-
                     console.log(data)
                     if(data === "verified"){
+                        console.log('hii');
                         placeOrder();
                     }else if(data === "otp expire"){
                         alert("otp expired Please try again")
