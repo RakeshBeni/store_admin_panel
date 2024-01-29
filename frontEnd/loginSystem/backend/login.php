@@ -8,6 +8,7 @@ include "../../../connection.php";
 if (isset($_POST)) {
     $json_data = file_get_contents("php://input");
     $data = json_decode($json_data, true);
+    $hashed_password = sha1($data['pass']);
 
     // print_r( $data);
     $query = mysqli_query($conn, "SELECT * FROM customers WHERE `email` = '$data[email]'");
@@ -15,7 +16,7 @@ if (isset($_POST)) {
     if($isEmailVaild === 0){
         die('inValidEmail');
     }else{
-        $query1 = mysqli_query($conn, "SELECT * FROM customers WHERE `email` = '$data[email]' AND BINARY `password` = '$data[pass]'");
+        $query1 = mysqli_query($conn, "SELECT * FROM customers WHERE `email` = '$data[email]' AND BINARY `password` = '$hashed_password'");
         $isPasswordCorrect = mysqli_num_rows($query1);
         if($isPasswordCorrect === 0){
             die('iscorrectPassword');

@@ -33,14 +33,17 @@ if (isset($_POST)) {
 
         $query1 = mysqli_query($conn, "SELECT * FROM `customers` WHERE `email` = '$email'");
         $rownum = mysqli_num_rows($query1);
+
+        $hashed_password = sha1($data['pass']);
+
         if ($rownum == 0) {
-            $query = mysqli_query($conn, "INSERT INTO `customers`( `Name`, `email`,  `password`, `otp`, `otptimeStamp`) VALUES ('$data[name]','$email','$data[pass]','$randomCode','$ddate')");
+            $query = mysqli_query($conn, "INSERT INTO `customers`( `Name`, `email`,  `password`, `otp`, `otptimeStamp`) VALUES ('$data[name]','$email','$hashed_password','$randomCode','$ddate')");
         } else {
             $query2 = mysqli_query($conn, "SELECT * FROM `customers` WHERE `email` = '$email' AND `verified` = '1'");
             $rownum2 = mysqli_num_rows($query2);
             if ($rownum2 == 0){
                 
-                $query = mysqli_query($conn, "UPDATE `customers` SET `Name`='$data[name]',`password`='$data[pass]',`otp`='$randomCode',`otptimeStamp`='$ddate' WHERE `email` = '$email'");
+                $query = mysqli_query($conn, "UPDATE `customers` SET `Name`='$data[name]',`password`='$hashed_password',`otp`='$randomCode',`otptimeStamp`='$ddate' WHERE `email` = '$email'");
             } else {
                 die('Already Email');
             }
