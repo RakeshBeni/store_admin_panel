@@ -83,7 +83,7 @@ include "./connection.php";
                 <tbody>
                     <?php
                     $index = 0;
-                    $result = mysqli_query($conn, "SELECT * FROM orders  WHERE `orderConfirmation` = '1' AND `trakingNo` IS NOT NULL AND `FinalStatus` = 'cancel'
+                    $result = mysqli_query($conn, "SELECT * FROM orders  WHERE `FinalStatus` = 'cancel'
                      ORDER BY sr DESC;");
                     while ($row = mysqli_fetch_assoc($result)) {
                         $index++;

@@ -8,8 +8,15 @@ if (isset($_POST)) {
     date_default_timezone_set("Asia/Calcutta");
     $ddate = date('Y-m-d H:i:s');
 
+    if(isset($_POST['stage'])){
 
-    $resutl = mysqli_query($conn, "UPDATE `orders` SET `FinalStatus`='$_POST[Status]',`finalDescription`='$_POST[description]' WHERE `sr` = '$_POST[orderId]'");
+        $resutl = mysqli_query($conn, "UPDATE `orders` SET `FinalStatus`='$_POST[Status]',`finalDescription`='$_POST[description]' WHERE `sr` = '$_POST[orderId]'");
+    }else{
+
+        $resutl = mysqli_query($conn, "UPDATE `orders` SET `FinalStatus`='$_POST[Status]',`finalDescription`='$_POST[description]' WHERE `sr` = '$_POST[orderId]'");
+    }
+
+
 
     $result2 = mysqli_query($conn, "SELECT `customersId` FROM `orders` WHERE `sr` = '$_POST[orderId]'");
     $row2 = mysqli_fetch_assoc($result2);
@@ -24,7 +31,7 @@ if (isset($_POST)) {
 
     if ($resutl) {
         echo "success";
-        header('location:../dispatchedOrders.php');
+        // header('location:../dispatchedOrders.php');
     }
 
 }

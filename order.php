@@ -13,14 +13,15 @@ include "./connection.php";
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/css/style.css">
     <style>
+        a {
+            color: #69aaff;
+            text-decoration: none;
+        }
 
-a {
-  color: #69aaff;
-  text-decoration: none;
-}
-a:hover{
-    color: #83ac55;
-}
+        a:hover {
+            color: #83ac55;
+        }
+
         ::-webkit-scrollbar {
             width: 5px;
         }
@@ -61,7 +62,7 @@ a:hover{
 </head>
 
 <body class="bg-dark text-light">
-    <?php include './navbar.php';?>
+    <?php include './navbar.php'; ?>
 
     <div class="container mt-4">
         <center>
@@ -83,14 +84,13 @@ a:hover{
                         <th scope="col">Phone No</th>
                         <th scope="col">Address</th>
                         <th scope="col">Order Value</th>
-                        <th scope="col">Products</th>
-                        <th scope="col">Processing</th>
+                        <th scope="col">Process</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     $index = 0;
-                    $result = mysqli_query($conn, "SELECT * FROM orders  WHERE `orderConfirmation` = '0' ORDER BY sr DESC;");
+                    $result = mysqli_query($conn, "SELECT * FROM orders  WHERE `orderConfirmation` = '0' AND `FinalStatus` IS NULL ORDER BY sr DESC;");
                     while ($row = mysqli_fetch_assoc($result)) {
                         $index++;
                     ?>
@@ -99,13 +99,13 @@ a:hover{
                             <td><?php echo $row['timestamp']; ?></td>
                             <td><?php $result1 = mysqli_query($conn, "SELECT `Name` FROM `customers` WHERE `userId` = '$row[customersId]'");
                                 $row1 = mysqli_fetch_assoc($result1);
-                              echo   "<a href='./customers.php?customer=".$row['customersId']."' >".$row1['Name']."</a>" ; ?></td>
+                                echo   "<a href='./customers.php?customer=" . $row['customersId'] . "' >" . $row1['Name'] . "</a>"; ?></td>
                             <td><?php echo $row['phoneNo']; ?></td>
                             <td><?php echo $row['address']; ?></td>
                             <td><?php echo $row['orderValue']; ?></td>
                             <td><!-- Button trigger modal -->
                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $row['sr'] ?>">
-                                    Products
+                                    Process
                                 </button>
 
                                 <!-- Modal -->
@@ -117,7 +117,9 @@ a:hover{
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                            <?php if($row['coupon'] != null){echo "<h4 class='text-success'> Coupon Applied : $row[coupon]   of <span class='text-warning'>  $row[discount] Rupess</span> </h4> ";}?>
+                                                <?php if ($row['coupon'] != null) {
+                                                    echo "<h4 class='text-success'> Coupon Applied : $row[coupon]   of <span class='text-warning'>  $row[discount] Rupess</span> </h4> ";
+                                                } ?>
                                                 <div class="m-5">
                                                     <table class="table table-striped border border-secondary">
                                                         <thead>
@@ -156,6 +158,13 @@ a:hover{
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-sr="<?php echo $row['sr']; ?>" data-bs-toggle="modal" data-bs-target="#CancelModal">
+                                                    Cancel Order
+                                                </button>
+                                                <button type="button" class="btn btn-success" data-sr="<?php echo $row['sr']; ?>" data-address="<?php echo $row['address'] ?>" data-bs-toggle="modal" data-bs-target="#ProccessModal">
+                                                    Success Order
+                                                </button>
+
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
                                             </div>
@@ -163,45 +172,7 @@ a:hover{
                                     </div>
                                 </div>
                             </td>
-                            <td><!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#examplel<?php echo $row['sr'] ?>">
-                                    Process
-                                </button>
 
-                                <!-- Modal -->
-                                <div class="modal fade" id="examplel<?php echo $row['sr'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog " style="color:black">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Order</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="./Backend/confirmOrder.php" method="post">
-
-                                                    <input type="text" value="<?php echo $row['sr']; ?>" name="orderSr" hidden>
-
-
-                                                    <div class="form-floating mb-3">
-                                                        <input class="form-control" id="floatingTextarea2" name="address" value="<?php echo  $row['address']; ?>" placeholder="Leave a comment here" style="height: 100px"></input>
-                                                        <label for="floatingTextarea2">Edit Address</label>
-                                                    </div>
-                                                    <div class="form-floating">
-                                                        <textarea class="form-control" name="description" placeholder="Leave a comment here" id="floatingText" style="height: 100px"></textarea>
-                                                        <label for="floatingText">Description</label>
-                                                    </div>
-
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-success">Confirm Order</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
                         </tr>
 
                     <?php } ?>
@@ -216,7 +187,69 @@ a:hover{
 
 
 
+    <div class="modal fade" id="ProccessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " style="color:black">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Order</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="./Backend/confirmOrder.php" method="post">
 
+                        <input type="text" value="" id="orderSr" name="orderSr" hidden>
+
+
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="floatingTextarea2" name="address" value="" placeholder="Address" style="height: 100px"></input>
+                            <label for="floatingTextarea2">Edit Address</label>
+                        </div>
+                        <div class="form-floating">
+                            <textarea class="form-control" name="description" placeholder="Leave a comment here" id="floatingText" style="height: 100px" required></textarea>
+                            <label for="floatingText">Description</label>
+                        </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Confirm Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="CancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " style="color:black">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Order</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="./Backend/delivered.php" method="post">
+
+                        <input type="text" value="" id="orderSr" name="orderId" hidden>
+                        <input type="text" value="cancel"  name="Status" hidden>
+                        <input type="text" value="con"  name="stage" hidden>
+
+                        <div class="form-floating">
+                            <textarea class="form-control" name="description" placeholder="Leave a comment here" id="floatingText" style="height: 100px" required></textarea>
+                            <label for="floatingText">Description</label>
+                        </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Cancel Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -225,6 +258,27 @@ a:hover{
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script>
+        $('#ProccessModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var address = button.data('address') // Extract info from data-* attributes
+            var sr = button.data('sr') // Extract info from data-* attributes
+       
+            var modal = $(this)
+            modal.find('#orderSr').val(sr)
+            modal.find('#floatingTextarea2').val(address)
+        })
+        $('#CancelModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+         
+            var sr = button.data('sr') // Extract info from data-* attributes
+       
+            var modal = $(this)
+            modal.find('#orderSr').val(sr)
+         
+        })
+    </script>
 
 </body>
 
