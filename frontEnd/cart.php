@@ -107,10 +107,8 @@ if (!isset($_SESSION['user'])) {
                 </div>
 
             <?php } ?>
-            <div class="d-flex">
-
-
-                <div class="col-md-6 col-12 ">
+            <div class="d-flex flex-wrap col-12  price">
+                <div class=" col-md-6 col-12">
                     <div class="form-floating mb-3 text-dark" id="couponfild">
                         <input type="email" class="form-control " id="couponInput" placeholder="name@example.com">
                         <label for="floatingInput ">Enter Coupon</label>
@@ -173,8 +171,12 @@ if (!isset($_SESSION['user'])) {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" id="confirmNO" class="btn btn-primary <?php if ($row1['verifiedPhoneNo'] === '1') { echo "d-none"; } ?>" onclick="confirmPhoneNo()">Confire Phone No</button>
-                        <button type="button" class="btn btn-primary <?php if ($row1['verifiedPhoneNo'] === '0') {  echo "d-none";  } ?>" onclick="placeOrder()">Confire Order</button>
+                        <button type="button" id="confirmNO" class="btn btn-primary <?php if ($row1['verifiedPhoneNo'] === '1') {
+                                                                                        echo "d-none";
+                                                                                    } ?>" onclick="confirmPhoneNo()">Confire Phone No</button>
+                        <button type="button" class="btn btn-primary <?php if ($row1['verifiedPhoneNo'] === '0') {
+                                                                            echo "d-none";
+                                                                        } ?>" onclick="placeOrder()">Confire Order</button>
                         <button type="button" id="otpWait" class="btn btn-primary disabled d-none">Wait for OTP</button>
                         <button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" id="showOtpModal" data-bs-target="#OTPmodal">Enter OTP</button>
                     </div>
@@ -339,8 +341,8 @@ if (!isset($_SESSION['user'])) {
                         $('#OTPmodal').modal("show")
                         document.getElementById("showOtpModal").classList.remove("d-none");
                         document.getElementById("otpWait").classList.add("d-none");
-                        
-                    }else{
+
+                    } else {
                         document.getElementById("confirmNO").classList.remove("d-none");
                         document.getElementById("otpWait").classList.add("d-none");
                         alert('There is some issue. Please Try After some time');
@@ -478,12 +480,12 @@ if (!isset($_SESSION['user'])) {
                 }).then(res => res.text())
                 .then(data => {
                     console.log(data)
-                    if(data === "verified"){
+                    if (data === "verified") {
                         console.log('hii');
                         placeOrder();
-                    }else if(data === "otp expire"){
+                    } else if (data === "otp expire") {
                         alert("otp expired Please try again")
-                    }else if(data === "otp invalid"){
+                    } else if (data === "otp invalid") {
                         alert('invalid Opt')
                     }
                 })
